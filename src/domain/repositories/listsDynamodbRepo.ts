@@ -38,16 +38,16 @@ export class ListsRepo {
     this._driver = driverProvider.driver
   }
 
-  async insertItem(listId: string, item: Item): Promise<List> {
-    return new List("id", "ok")
+  async insertItem(listId: string, userId: string, item: Item): Promise<List> {
+    return new List(listId, userId, "ok")
   }
 
-  async deleteItem(listId: string, itemId: string): Promise<List> {
-    return new List("id", "ok")
+  async deleteItem(listId: string, userId: string, itemId: string): Promise<List> {
+    return new List(listId, userId, "ok")
   }
 
-  async findListById(listId: string): Promise<List> {
-    return new List("id", "ok")
+  async findListById(listId: string, userId: string): Promise<List> {
+    return new List(listId, userId, "ok")
   }
 
   async insertList(list: List): Promise<List> {
