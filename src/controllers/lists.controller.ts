@@ -9,7 +9,7 @@ import {
 import { CreateListPayload } from 'src/domain/interfaces/CreateList.dto'
 import { PublicListData } from 'src/domain/interfaces/List.dto'
 import List from 'src/domain/models/List'
-import { ListsRepo } from '../domain/repositories/listsRepo'
+import { ListsRepo } from '../domain/repositories/listsDynamodbRepo'
 
 @Controller('lists')
 @ApiTags('lists')
@@ -27,7 +27,7 @@ export class ListsController {
     type: PublicListData,
   })
   async findLists(): Promise<PublicListData[]> {
-    const lists = await this.listsRepo.findLists()
+    const lists = await this.listsRepo.findLists("123")
     return lists.toJSON()
   }
 

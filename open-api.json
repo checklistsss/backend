@@ -56,7 +56,12 @@
       "PublicListData": {
         "type": "object",
         "properties": {
-          "id": {
+          "listId": {
+            "type": "string",
+            "readOnly": true,
+            "example": "5e0a3c93-693f-4803-accc-6e339cf02381"
+          },
+          "userId": {
             "type": "string",
             "readOnly": true,
             "example": "5e0a3c93-693f-4803-accc-6e339cf02381"
@@ -75,7 +80,8 @@
           }
         },
         "required": [
-          "id",
+          "listId",
+          "userId",
           "title",
           "items"
         ]

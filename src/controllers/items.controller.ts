@@ -10,7 +10,7 @@ import {
 import { CreateItemPayload } from 'src/domain/interfaces/CreateItem.dto'
 import { PublicListData } from 'src/domain/interfaces/List.dto'
 import Item from 'src/domain/models/Item'
-import { ListsRepo } from '../domain/repositories/listsRepo'
+import { ListsRepo } from '../domain/repositories/listsDynamodbRepo'
 
 @Controller('lists/:listId/items')
 @ApiTags('items')

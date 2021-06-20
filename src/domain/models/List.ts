@@ -17,6 +17,10 @@ export default class List implements JSONSerializable<PublicListData> {
     return new List(uuid(), createListPayload.title)
   }
 
+  static fromJSON(list: PublicListData): List{
+    return new List(list.listId, list.title)
+  }
+
   set id(value: string) {
     this._id = value
   }
@@ -48,7 +52,8 @@ export default class List implements JSONSerializable<PublicListData> {
 
   toJSON(): PublicListData {
     return {
-      id: this.id,
+      listId: this.id,
+      userId: "123",
       title: this.title,
       items: this._items.toJSON(),
     }

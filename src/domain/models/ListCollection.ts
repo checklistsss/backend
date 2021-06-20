@@ -8,6 +8,12 @@ export default class ListCollection
 {
   constructor(private _lists: List[] = []) {}
 
+  static fromJSON(lists: PublicListData[]): ListCollection{
+    return new ListCollection(
+      lists.map(list => List.fromJSON(list))  
+    )
+  }
+
   add(item: List) {
     this._lists.push(item)
   }

@@ -5,7 +5,12 @@ export class PublicListData {
   @ApiResponseProperty({
     example: '5e0a3c93-693f-4803-accc-6e339cf02381',
   })
-  id: string
+  listId: string
+  
+  @ApiResponseProperty({
+    example: '5e0a3c93-693f-4803-accc-6e339cf02381',
+  })
+  userId: string
 
   @ApiResponseProperty({
     example: 'My Groceries List',
