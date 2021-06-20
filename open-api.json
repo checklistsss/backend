@@ -1,0 +1,262 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "checklists",
+    "description": "Simple checklists API",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Renato Gama",
+      "url": "https://github.com/renatoargh",
+      "email": "renatoargh@gmail.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "lists",
+      "description": "API operations for the `List` resources"
+    },
+    {
+      "name": "items",
+      "description": "API operations for the `Item` resources"
+    }
+  ],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "PublicItemData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true,
+            "example": "3fe9780a-8847-4966-8cac-39cfcbd68e25"
+          },
+          "description": {
+            "type": "string",
+            "readOnly": true,
+            "example": "Buy spaguetti"
+          },
+          "status": {
+            "type": "string",
+            "readOnly": true,
+            "enum": [
+              "to_do",
+              "in_progress",
+              "done"
+            ],
+            "example": "done"
+          }
+        },
+        "required": [
+          "id",
+          "description",
+          "status"
+        ]
+      },
+      "PublicListData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true,
+            "example": "5e0a3c93-693f-4803-accc-6e339cf02381"
+          },
+          "title": {
+            "type": "string",
+            "readOnly": true,
+            "example": "My Groceries List"
+          },
+          "items": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicItemData"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "items"
+        ]
+      },
+      "CreateListPayload": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "My Groceries List"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "CreateItemPayload": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "example": "Buy spaguetti"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "to_do",
+              "in_progress",
+              "done"
+            ],
+            "example": "done"
+          }
+        },
+        "required": [
+          "description",
+          "status"
+        ]
+      }
+    }
+  },
+  "paths": {
+    "/lists": {
+      "get": {
+        "operationId": "findLists",
+        "summary": "Returns all lists that the user has access, optionally filtered by some criteria",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Array of the `List` resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicListData"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "lists"
+        ]
+      },
+      "post": {
+        "operationId": "createList",
+        "summary": "Creates a new list",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateListPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "List was succesfuly created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicListData"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "lists"
+        ]
+      }
+    },
+    "/lists/{listId}/items": {
+      "post": {
+        "operationId": "createItem",
+        "summary": "Adds a new item to a list",
+        "parameters": [
+          {
+            "name": "listId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateItemPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Item was succesfuly created. The updated list is returned.",
+            "headers": {
+              "x-item-id": {
+                "description": "Id of the newly created item",
+                "example": "4cc61a3d-5a70-4f64-9703-b9648785efee"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicListData"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "items"
+        ]
+      }
+    },
+    "/lists/{listId}/items/{itemId}": {
+      "delete": {
+        "operationId": "deleteItem",
+        "summary": "Removes an item from a list",
+        "parameters": [
+          {
+            "name": "listId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item was susccesfuly removed. The updated list is returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicListData"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "items"
+        ]
+      }
+    }
+  }
+}
