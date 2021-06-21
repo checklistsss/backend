@@ -2,7 +2,6 @@ import { Response } from 'express'
 import { Body, Controller, Delete, Param, Post, Res, Headers } from '@nestjs/common'
 import {
   ApiCreatedResponse,
-  ApiHeader,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -12,7 +11,6 @@ import { PublicListData } from 'src/domain/interfaces/List.dto'
 import Item from 'src/domain/models/Item'
 import { ListsRepo } from '../domain/repositories/listsDynamodbRepo'
 import { HeadersMiddleware } from 'src/utils/headersMiddleware'
-import { IHeaders } from 'src/domain/interfaces/Headers.dto'
 
 @HeadersMiddleware()
 @Controller('lists/:listId/items')
@@ -35,10 +33,9 @@ export class ItemsController {
   async createItem(
     @Param('listId') listId: string,
     @Body() createItemPayload: CreateItemPayload,
-    @Headers() headers: IHeaders,
+    @Headers('x-user-id') userId: string,
     @Res({ passthrough: true }) res: Response,
   ): Promise<PublicListData> {
-    const userId = headers['x-user-id']
     const item = Item.fromCreateItemPayload(createItemPayload)
     const list = await this.listsRepo.insertItem(userId, listId, item)
 
@@ -55,9 +52,8 @@ export class ItemsController {
   async deleteItem(
     @Param('listId') listId: string,
     @Param('itemId') itemId: string,
-    @Headers() headers: IHeaders,
+    @Headers('x-user-id') userId: string,
   ): Promise<PublicListData> {
-    const userId = headers['x-user-id']
     const list = await this.listsRepo.deleteItem(listId, userId, itemId)
     return list.toJSON()
   }

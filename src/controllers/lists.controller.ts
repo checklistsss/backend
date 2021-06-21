@@ -1,14 +1,12 @@
-import { Headers, Body, Controller, Get, Post } from '@nestjs/common'
+import { Headers, Body, Controller, Get, Post, Delete, Param } from '@nestjs/common'
 import {
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiResponse,
   ApiTags,
-  ApiHeader,
 } from '@nestjs/swagger'
 import { CreateListPayload } from 'src/domain/interfaces/CreateList.dto'
-import { IHeaders } from 'src/domain/interfaces/Headers.dto'
 import { PublicListData } from 'src/domain/interfaces/List.dto'
 import List from 'src/domain/models/List'
 import { ListsRepo } from '../domain/repositories/listsDynamodbRepo'
@@ -31,9 +29,8 @@ export class ListsController {
     type: PublicListData,
   })
   async findLists(
-    @Headers() headers: IHeaders
+    @Headers('x-user-id') userId: string
   ): Promise<PublicListData[]> {
-    const userId = headers['x-user-id']
     const lists = await this.listsRepo.findLists(userId)
     return lists.toJSON()
   }
@@ -46,13 +43,23 @@ export class ListsController {
   })
   async createList(
     @Body() createListPayload: CreateListPayload,
-    @Headers() headers: IHeaders
+    @Headers('x-user-id') userId: string
   ): Promise<PublicListData> {
-    const userId = headers['x-user-id']
-
     const list = List.fromCreateListPayload(userId, createListPayload)
     await this.listsRepo.insertList(list)
 
     return list.toJSON()
+  }
+
+  @Delete('/:listId')
+  @ApiOperation({ summary: 'Deletes a list' })
+  @ApiNoContentResponse({
+    description: 'List was succesfuly deleted',
+  })
+  async deleteList(
+    @Param('listId') listId: string,
+    @Headers('x-user-id') userId: string
+  ): Promise<void> {
+    await this.listsRepo.deleteList(userId, listId)
   }
 }
