@@ -73,4 +73,11 @@ export class ListsRepo {
 
     return ListCollection.fromJSON(items as PublicListData[])
   }
+
+  async deleteList(userId: string, listId: string): Promise<void> {
+    await this._driver.delete({
+      TableName: "checklists",
+      Key: { userId, listId },
+    }).promise()
+  }
 }
