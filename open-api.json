@@ -112,12 +112,12 @@
               "in_progress",
               "done"
             ],
-            "example": "done"
+            "example": "done",
+            "default": "to_do"
           }
         },
         "required": [
-          "description",
-          "status"
+          "description"
         ]
       }
     }
@@ -133,6 +133,14 @@
             "in": "header",
             "description": "UserId header",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "required": true,
+            "in": "header",
             "schema": {
               "type": "string"
             }
@@ -169,6 +177,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-user-id",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -198,6 +214,47 @@
         ]
       }
     },
+    "/lists/{listId}": {
+      "delete": {
+        "operationId": "deleteList",
+        "summary": "Deletes a list",
+        "parameters": [
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "UserId header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "listId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "List was succesfuly deleted"
+          }
+        },
+        "tags": [
+          "lists"
+        ]
+      }
+    },
     "/lists/{listId}/items": {
       "post": {
         "operationId": "createItem",
@@ -216,6 +273,14 @@
             "name": "listId",
             "required": true,
             "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "required": true,
+            "in": "header",
             "schema": {
               "type": "string"
             }
@@ -280,6 +345,14 @@
             "name": "itemId",
             "required": true,
             "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "required": true,
+            "in": "header",
             "schema": {
               "type": "string"
             }
