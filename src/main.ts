@@ -27,7 +27,7 @@ async function bootstrap() {
     .setTitle(pkg.name)
     .setDescription(pkg.description)
     .setVersion(pkg.version)
-    .setContact(pkg.author.name, pkg.author.url, pkg.author.email)
+    .setContact(pkg.authors[0].name, pkg.authors[0].url, pkg.authors[0].email)
     .addTag('lists', 'API operations for the `List` resources')
     .addTag('items', 'API operations for the `Item` resources')
     .build()
