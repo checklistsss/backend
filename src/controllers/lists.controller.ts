@@ -1,20 +1,24 @@
-import { Body, Controller, Get, Post } from '@nestjs/common'
+import { Headers, Body, Controller, Get, Post } from '@nestjs/common'
 import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
+  ApiHeader,
 } from '@nestjs/swagger'
 import { CreateListPayload } from 'src/domain/interfaces/CreateList.dto'
+import { IHeaders } from 'src/domain/interfaces/Headers.dto'
 import { PublicListData } from 'src/domain/interfaces/List.dto'
 import List from 'src/domain/models/List'
 import { ListsRepo } from '../domain/repositories/listsDynamodbRepo'
+import { HeadersMiddleware } from '../utils/headersMiddleware'
 
+@HeadersMiddleware()
 @Controller('lists')
 @ApiTags('lists')
 export class ListsController {
-  constructor(private readonly listsRepo: ListsRepo) {}
+  constructor(private readonly listsRepo: ListsRepo) { }
 
   @Get()
   @ApiOperation({
@@ -26,8 +30,11 @@ export class ListsController {
     isArray: true,
     type: PublicListData,
   })
-  async findLists(): Promise<PublicListData[]> {
-    const lists = await this.listsRepo.findLists("123")
+  async findLists(
+    @Headers() headers: IHeaders
+  ): Promise<PublicListData[]> {
+    const userId = headers['x-user-id']
+    const lists = await this.listsRepo.findLists(userId)
     return lists.toJSON()
   }
 
@@ -39,8 +46,11 @@ export class ListsController {
   })
   async createList(
     @Body() createListPayload: CreateListPayload,
+    @Headers() headers: IHeaders
   ): Promise<PublicListData> {
-    const list = List.fromCreateListPayload(createListPayload)
+    const userId = headers['x-user-id']
+
+    const list = List.fromCreateListPayload(userId, createListPayload)
     await this.listsRepo.insertList(list)
 
     return list.toJSON()

@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import {
   SwaggerModule,
@@ -13,6 +14,14 @@ const pkg = require('../package.json')
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+  app.useGlobalPipes(new ValidationPipe({
+    validationError: {
+      value: false
+    },
+    skipMissingProperties: false,
+    whitelist: true,
+    forbidNonWhitelisted: true,
+  }));
 
   const config = new DocumentBuilder()
     .setTitle(pkg.name)

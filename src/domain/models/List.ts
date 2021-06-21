@@ -9,16 +9,17 @@ import JSONSerializable from './Serializable'
 export default class List implements JSONSerializable<PublicListData> {
   constructor(
     private _id: string,
+    private readonly _userId: string,
     private _title: string,
     private _items: ItemCollection = new ItemCollection(),
   ) {}
 
-  static fromCreateListPayload(createListPayload: CreateListPayload) {
-    return new List(uuid(), createListPayload.title)
+  static fromCreateListPayload(userId: string, createListPayload: CreateListPayload) {
+    return new List(uuid(), userId, createListPayload.title)
   }
 
   static fromJSON(list: PublicListData): List{
-    return new List(list.listId, list.title)
+    return new List(list.listId, list.userId, list.title)
   }
 
   set id(value: string) {
@@ -53,7 +54,7 @@ export default class List implements JSONSerializable<PublicListData> {
   toJSON(): PublicListData {
     return {
       listId: this.id,
-      userId: "123",
+      userId: this._userId,
       title: this.title,
       items: this._items.toJSON(),
     }

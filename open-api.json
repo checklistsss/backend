@@ -127,7 +127,17 @@
       "get": {
         "operationId": "findLists",
         "summary": "Returns all lists that the user has access, optionally filtered by some criteria",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "UserId header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Array of the `List` resource",
@@ -150,7 +160,17 @@
       "post": {
         "operationId": "createList",
         "summary": "Creates a new list",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "UserId header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -183,6 +203,15 @@
         "operationId": "createItem",
         "summary": "Adds a new item to a list",
         "parameters": [
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "UserId header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "listId",
             "required": true,
@@ -230,6 +259,15 @@
         "operationId": "deleteItem",
         "summary": "Removes an item from a list",
         "parameters": [
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "UserId header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "listId",
             "required": true,
