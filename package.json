@@ -2,11 +2,14 @@
   "name": "checklists",
   "version": "1.0.0",
   "description": "Simple checklists API",
-  "author": {
+  "authors": [{
     "name": "Renato Gama",
     "email": "renatoargh@gmail.com",
     "url": "https://github.com/renatoargh"
-  },
+  }, {
+    "name": "Thiago Naves",
+    "url": "https://github.com/thiagonpb"
+  }],
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
