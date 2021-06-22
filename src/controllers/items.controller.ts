@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger'
 import { CreateItemPayload } from 'src/domain/interfaces/CreateItem.dto'
 import Item from 'src/domain/models/Item'
-import { ListsRepo } from '../domain/repositories/listsDynamodbRepo'
+import { ListsRepo } from '../domain/repositories/listsRepo'
 import { HeadersMiddleware } from 'src/utils/headersMiddleware'
 import { ListApiSerializer } from 'src/domain/serializers/api/ListApiSerializer'
 import { ListApiModel } from 'src/domain/interfaces/ListApiModel.dto'
