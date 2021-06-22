@@ -1,46 +1,125 @@
+import { DynamoDB } from 'aws-sdk'
 import { Injectable } from '@nestjs/common'
 import Item from '../models/Item'
 import List from '../models/List'
 import ListCollection from '../models/ListCollection'
+import { ListDBModel } from '../interfaces/ListDBModel.dto'
+import { ListDbSerializer } from '../serializers/db/ListDbSerializer'
+import { ItemDbSerializer } from '../serializers/db/ItemDbSerializer'
+import { ListFactory } from '../factories/ListFactory'
+import { ListCollectionFactory } from '../factories/ListCollectionFactory'
+import { ListCollectionDbModel } from '../interfaces/ListCollectionDbModel.dto'
 
-const lists: ListCollection = new ListCollection()
+export abstract class DynamodbDriverProvider {
+  driver: DynamoDB.DocumentClient
+}
+
+@Injectable()
+export class RealDynamodbDriverProvider implements DynamodbDriverProvider {
+  private readonly _driver: DynamoDB.DocumentClient
+
+  constructor() {
+    this._driver = new DynamoDB.DocumentClient({
+      apiVersion: "2012-08-10",
+      region: "eu-central-1",
+      accessKeyId: "123",
+      secretAccessKey: "123",
+      params: {
+        TableName: "checklists",
+      }
+    })
+  }
+
+  get driver(): DynamoDB.DocumentClient {
+    return this._driver
+  }
+}
 
 @Injectable()
 export class ListsRepo {
-  insertItem(listId: string, item: Item): Promise<List> {
-    const list = lists.findById(listId)
+  private readonly _driver: DynamoDB.DocumentClient
 
-    if (!list) {
-      throw new Error('List not found')
-    }
-
-    list.addItem(item)
-    return Promise.resolve(list)
+  constructor(
+    driverProvider: DynamodbDriverProvider,
+    private readonly listFactory: ListFactory,
+    private readonly listCollectionFactory: ListCollectionFactory,
+    private readonly listDbSerializer: ListDbSerializer,
+    private readonly itemDbSerializer: ItemDbSerializer,
+  ) {
+    this._driver = driverProvider.driver
   }
 
-  async deleteItem(listId: string, itemId: string): Promise<List> {
-    const list = await this.findListById(listId)
-    list.removeItemById(itemId)
+  async insertItem(listId: string, userId: string, item: Item): Promise<List> {
+    const { Attributes: data } = await this._driver.update({
+      Key: { userId, listId },
+      UpdateExpression: `
+        SET 
+          #items.#itemId = :item
+      `,
+      ExpressionAttributeNames: {
+        '#itemId': item.id,
+        '#items': 'items',
+      },
+      ExpressionAttributeValues: {
+        ':item': this.itemDbSerializer.toJSON(item),
+      },
+      ConditionExpression: `attribute_not_exists(#items.#itemId)`,
+      ReturnValues: 'ALL_NEW',
+      TableName: 'checklists',
+    }).promise()
 
-    return list
+    return this.listFactory.fromDbModel(data as ListDBModel)
   }
 
-  async findListById(listId: string): Promise<List> {
-    const list = lists.findById(listId)
+  async deleteItem(listId: string, userId: string, itemId: string): Promise<List> {
+    const { Attributes: data } = await this._driver.update({
+      Key: { userId, listId },
+      UpdateExpression: `
+        REMOVE 
+          #items.#itemId
+      `,
+      ExpressionAttributeNames: {
+        '#itemId': itemId,
+        '#items': 'items',
+      },
+      ConditionExpression: `
+        attribute_exists(#items.#itemId)
+      `,
+      ReturnValues: 'ALL_NEW',
+      TableName: 'checklists',
+    }).promise()
 
-    if (!list) {
-      throw new Error(`List with id "${listId}" was not found`)
-    }
-
-    return list
+    return this.listFactory.fromDbModel(data as ListDBModel)    
   }
 
   async insertList(list: List): Promise<List> {
-    lists.add(list)
+    await this._driver.put({
+      TableName: "checklists",
+      Item: this.listDbSerializer.toJSON(list),
+    }).promise()
+
     return list
   }
 
-  async findLists(): Promise<ListCollection> {
-    return lists
+  async findLists(userId: string): Promise<ListCollection> {
+    const { Items: items } = await this._driver.query({
+      TableName: "checklists",
+      KeyConditionExpression: '#userId = :userId',
+      ExpressionAttributeNames: { '#userId': 'userId' },
+      ExpressionAttributeValues: { ':userId': userId },
+    }).promise()
+
+    if (!items) {
+      throw new Error('Query returned no items')
+    }
+
+    return this.listCollectionFactory.fromDbCollection(items as ListCollectionDbModel)
+  }
+
+  async deleteList(userId: string, listId: string): Promise<void> {
+    await this._driver.delete({
+      TableName: "checklists",
+      Key: { userId, listId },
+    }).promise()
   }
 }
