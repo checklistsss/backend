@@ -8,6 +8,7 @@ export class ListFactory {
   constructor(
     private readonly itemCollectionFactory: ItemCollectionFactory,
   ) {}
+
   fromDbModel(listDbModel: ListDBModel) {
     return new List(
       listDbModel.listId,

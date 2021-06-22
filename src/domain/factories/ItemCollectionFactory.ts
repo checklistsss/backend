@@ -8,6 +8,7 @@ export class ItemCollectionFactory {
   constructor(
     private readonly itemFactory: ItemFactory,
   ) {}
+
   fromDbCollection(
     itemCollectionDbModel: ItemCollectionDbModel
   ): ItemCollection {
