@@ -6,30 +6,18 @@ import ItemCollection from './ItemCollection'
 
 export default class List {
   constructor(
-    private _id: string,
-    private _userId: string,
-    private _title: string,
-    private _items: ItemCollection = new ItemCollection(),
+    private readonly _id: string,
+    private readonly _userId: string,
+    private readonly _title: string,
+    private readonly _items: ItemCollection = new ItemCollection(),
   ) {}
-
-  set id(value: string) {
-    this._id = value
-  }
 
   get id() {
     return this._id
   }
 
-  set userId(value: string) {
-    this._userId = value
-  }
-
   get userId() {
     return this._userId
-  }
-
-  set title(value: string) {
-    this._title = value
   }
 
   get title() {

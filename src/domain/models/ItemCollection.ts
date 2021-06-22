@@ -2,7 +2,7 @@ import { Nullable } from 'src/utils/types'
 import Item from './Item'
 
 export default class ItemCollection {
-  constructor(private _items: Item[] = []) {}
+  constructor(private readonly _items: Item[] = []) {}
 
   add(item: Item) {
     this._items.push(item)
