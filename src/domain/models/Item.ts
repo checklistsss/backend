@@ -1,10 +1,8 @@
 import { v4 as uuid } from 'uuid'
 import { ItemStatus } from '../models/ItemStatus'
 import { CreateItemPayload } from '../interfaces/CreateItem.dto'
-import { PublicItemData } from '../interfaces/Item.dto'
-import JSONSerializable from './Serializable'
 
-export default class Item implements JSONSerializable<PublicItemData> {
+export default class Item {
   constructor(
     private _id: string,
     private _description: string,
@@ -37,13 +35,5 @@ export default class Item implements JSONSerializable<PublicItemData> {
 
   get status() {
     return this._status
-  }
-
-  toJSON(): PublicItemData {
-    return {
-      id: this.id,
-      description: this.description,
-      status: this.status,
-    }
   }
 }

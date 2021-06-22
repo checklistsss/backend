@@ -119,6 +119,43 @@
         "required": [
           "description"
         ]
+      },
+      "ItemApiModel": {
+        "type": "object",
+        "properties": {}
+      },
+      "ListApiModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true,
+            "example": "5e0a3c93-693f-4803-accc-6e339cf02381"
+          },
+          "userId": {
+            "type": "string",
+            "readOnly": true,
+            "example": "9398438e-4fa9-4b24-980e-a73a4cd40daf"
+          },
+          "title": {
+            "type": "string",
+            "readOnly": true,
+            "example": "My Groceries List"
+          },
+          "items": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemApiModel"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "title",
+          "items"
+        ]
       }
     }
   },
@@ -308,7 +345,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PublicListData"
+                  "$ref": "#/components/schemas/ListApiModel"
                 }
               }
             }
@@ -364,7 +401,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PublicListData"
+                  "$ref": "#/components/schemas/ListApiModel"
                 }
               }
             }

@@ -7,22 +7,26 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { CreateItemPayload } from 'src/domain/interfaces/CreateItem.dto'
-import { PublicListData } from 'src/domain/interfaces/List.dto'
 import Item from 'src/domain/models/Item'
 import { ListsRepo } from '../domain/repositories/listsDynamodbRepo'
 import { HeadersMiddleware } from 'src/utils/headersMiddleware'
+import { ListApiSerializer } from 'src/domain/serializers/api/ListApiSerializer'
+import { ListApiModel } from 'src/domain/interfaces/ListApiModel.dto'
 
 @HeadersMiddleware()
 @Controller('lists/:listId/items')
 @ApiTags('items')
 export class ItemsController {
-  constructor(private readonly listsRepo: ListsRepo) {}
+  constructor(
+    private readonly listsRepo: ListsRepo,
+    private readonly listApiSerializer: ListApiSerializer,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Adds a new item to a list' })
   @ApiCreatedResponse({
     description: 'Item was succesfuly created. The updated list is returned.',
-    type: PublicListData,
+    type: ListApiModel,
     headers: {
       'x-item-id': {
         description: 'Id of the newly created item',
@@ -35,26 +39,26 @@ export class ItemsController {
     @Body() createItemPayload: CreateItemPayload,
     @Headers('x-user-id') userId: string,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<PublicListData> {
+  ): Promise<ListApiModel> {
     const item = Item.fromCreateItemPayload(createItemPayload)
-    const list = await this.listsRepo.insertItem(userId, listId, item)
+    const list = await this.listsRepo.insertItem(listId, userId, item)
 
     res.set('x-item-id', item.id)
-    return list.toJSON()
+    return this.listApiSerializer.toJSON(list)
   }
 
   @Delete(':itemId')
   @ApiOperation({ summary: 'Removes an item from a list' })
   @ApiOkResponse({
     description: 'Item was susccesfuly removed. The updated list is returned.',
-    type: PublicListData,
+    type: ListApiModel,
   })
   async deleteItem(
     @Param('listId') listId: string,
     @Param('itemId') itemId: string,
     @Headers('x-user-id') userId: string,
-  ): Promise<PublicListData> {
+  ): Promise<ListApiModel> {
     const list = await this.listsRepo.deleteItem(listId, userId, itemId)
-    return list.toJSON()
+    return this.listApiSerializer.toJSON(list)
   }
 }

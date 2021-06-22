@@ -1,11 +1,7 @@
 import { Nullable } from 'src/utils/types'
-import { PublicItemData } from '../interfaces/Item.dto'
 import Item from './Item'
-import JSONSerializable from './Serializable'
 
-export default class ItemCollection
-  implements JSONSerializable<PublicItemData[]>
-{
+export default class ItemCollection {
   constructor(private _items: Item[] = []) {}
 
   add(item: Item) {
@@ -14,6 +10,10 @@ export default class ItemCollection
 
   findById(itemId: string): Nullable<Item> {
     return this._items.find((i) => i.id === itemId)
+  }
+
+  get items(): Item[] {
+    return [...this._items]
   }
 
   private findIndexById(itemId: string): Nullable<number> {
@@ -28,9 +28,5 @@ export default class ItemCollection
     }
 
     this._items.splice(itemIndex, 1)
-  }
-
-  toJSON(): PublicItemData[] {
-    return this._items.map((i) => i.toJSON())
   }
 }

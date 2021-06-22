@@ -8,7 +8,11 @@ import {
 } from '@nestjs/swagger'
 import { CreateListPayload } from 'src/domain/interfaces/CreateList.dto'
 import { PublicListData } from 'src/domain/interfaces/List.dto'
+import { ListApiModel } from 'src/domain/interfaces/ListApiModel.dto'
+import { ListCollectionApiModel } from 'src/domain/interfaces/ListCollectionApiModel.dto'
 import List from 'src/domain/models/List'
+import { ListApiSerializer } from 'src/domain/serializers/api/ListApiSerializer'
+import { ListCollectionApiSerializer } from 'src/domain/serializers/api/ListCollectionApiSerializer'
 import { ListsRepo } from '../domain/repositories/listsDynamodbRepo'
 import { HeadersMiddleware } from '../utils/headersMiddleware'
 
@@ -16,7 +20,11 @@ import { HeadersMiddleware } from '../utils/headersMiddleware'
 @Controller('lists')
 @ApiTags('lists')
 export class ListsController {
-  constructor(private readonly listsRepo: ListsRepo) { }
+  constructor(
+    private readonly listsRepo: ListsRepo,
+    private readonly listApiSerializer: ListApiSerializer,
+    private readonly listCollectionApiSerializer: ListCollectionApiSerializer,
+  ) { }
 
   @Get()
   @ApiOperation({
@@ -30,9 +38,9 @@ export class ListsController {
   })
   async findLists(
     @Headers('x-user-id') userId: string
-  ): Promise<PublicListData[]> {
+  ): Promise<ListCollectionApiModel> {
     const lists = await this.listsRepo.findLists(userId)
-    return lists.toJSON()
+    return this.listCollectionApiSerializer.toJSON(lists)
   }
 
   @Post()
@@ -44,11 +52,11 @@ export class ListsController {
   async createList(
     @Body() createListPayload: CreateListPayload,
     @Headers('x-user-id') userId: string
-  ): Promise<PublicListData> {
+  ): Promise<ListApiModel> {
     const list = List.fromCreateListPayload(userId, createListPayload)
     await this.listsRepo.insertList(list)
 
-    return list.toJSON()
+    return this.listApiSerializer.toJSON(list)
   }
 
   @Delete('/:listId')

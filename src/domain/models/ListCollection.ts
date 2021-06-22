@@ -1,11 +1,8 @@
 import { Nullable } from 'src/utils/types'
 import { PublicListData } from '../interfaces/List.dto'
 import List from './List'
-import JSONSerializable from './Serializable'
 
-export default class ListCollection
-  implements JSONSerializable<PublicListData[]>
-{
+export default class ListCollection {
   constructor(private _lists: List[] = []) {}
 
   static fromJSON(lists: PublicListData[]): ListCollection{
@@ -14,15 +11,15 @@ export default class ListCollection
     )
   }
 
+  get lists(): List[] {
+    return [...this._lists]
+  }
+
   add(item: List) {
     this._lists.push(item)
   }
 
   findById(listId: string): Nullable<List> {
     return this._lists.find((l) => l.id === listId) || null
-  }
-
-  toJSON(): PublicListData[] {
-    return this._lists.map((i) => i.toJSON())
   }
 }

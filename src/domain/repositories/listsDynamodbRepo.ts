@@ -4,6 +4,10 @@ import Item from '../models/Item'
 import List from '../models/List'
 import ListCollection from '../models/ListCollection'
 import { PublicListData } from '../interfaces/List.dto'
+import { ListDBModel } from '../interfaces/ListDBModel.dto'
+import { ListDbSerializer } from '../serializers/db/ListDbSerializer'
+import { ItemDbSerializer } from '../serializers/db/ItemDbSerializer'
+import { ListFactory } from '../factories/ListFactory'
 
 export abstract class DynamodbDriverProvider {
   driver: DynamoDB.DocumentClient
@@ -34,12 +38,35 @@ export class RealDynamodbDriverProvider implements DynamodbDriverProvider {
 export class ListsRepo {
   private readonly _driver: DynamoDB.DocumentClient
 
-  constructor(driverProvider: DynamodbDriverProvider) {
+  constructor(
+    driverProvider: DynamodbDriverProvider,
+    private readonly listFactory: ListFactory,
+    private readonly listDbSerializer: ListDbSerializer,
+    private readonly itemDbSerializer: ItemDbSerializer,
+  ) {
     this._driver = driverProvider.driver
   }
 
   async insertItem(listId: string, userId: string, item: Item): Promise<List> {
-    return new List(listId, userId, "ok")
+    const { Attributes: data } = await this._driver.update({
+      Key: { userId, listId },
+      UpdateExpression: `
+        SET 
+          #items.#itemId = :item
+      `,
+      ExpressionAttributeNames: {
+        '#itemId': item.id,
+        '#items': 'items',
+      },
+      ExpressionAttributeValues: {
+        ':item': this.itemDbSerializer.toJSON(item),
+      },
+      ConditionExpression: `attribute_not_exists(#items.#itemId)`,
+      ReturnValues: 'ALL_NEW',
+      TableName: 'checklists',
+    }).promise()
+
+    return this.listFactory.fromDbModel(data as ListDBModel)
   }
 
   async deleteItem(listId: string, userId: string, itemId: string): Promise<List> {
@@ -53,7 +80,7 @@ export class ListsRepo {
   async insertList(list: List): Promise<List> {
     await this._driver.put({
       TableName: "checklists",
-      Item: list.toJSON(),
+      Item: this.listDbSerializer.toJSON(list),
     }).promise()
 
     return list
