@@ -23,103 +23,6 @@
   "servers": [],
   "components": {
     "schemas": {
-      "PublicItemData": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true,
-            "example": "3fe9780a-8847-4966-8cac-39cfcbd68e25"
-          },
-          "description": {
-            "type": "string",
-            "readOnly": true,
-            "example": "Buy spaguetti"
-          },
-          "status": {
-            "type": "string",
-            "readOnly": true,
-            "enum": [
-              "to_do",
-              "in_progress",
-              "done"
-            ],
-            "example": "done"
-          }
-        },
-        "required": [
-          "id",
-          "description",
-          "status"
-        ]
-      },
-      "PublicListData": {
-        "type": "object",
-        "properties": {
-          "listId": {
-            "type": "string",
-            "readOnly": true,
-            "example": "5e0a3c93-693f-4803-accc-6e339cf02381"
-          },
-          "userId": {
-            "type": "string",
-            "readOnly": true,
-            "example": "5e0a3c93-693f-4803-accc-6e339cf02381"
-          },
-          "title": {
-            "type": "string",
-            "readOnly": true,
-            "example": "My Groceries List"
-          },
-          "items": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PublicItemData"
-            }
-          }
-        },
-        "required": [
-          "listId",
-          "userId",
-          "title",
-          "items"
-        ]
-      },
-      "CreateListPayload": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "example": "My Groceries List"
-          }
-        },
-        "required": [
-          "title"
-        ]
-      },
-      "CreateItemPayload": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string",
-            "example": "Buy spaguetti"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "to_do",
-              "in_progress",
-              "done"
-            ],
-            "example": "done",
-            "default": "to_do"
-          }
-        },
-        "required": [
-          "description"
-        ]
-      },
       "ItemApiModel": {
         "type": "object",
         "properties": {
@@ -182,6 +85,40 @@
           "title",
           "items"
         ]
+      },
+      "CreateListPayload": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "My Groceries List"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "CreateItemPayload": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "example": "Buy spaguetti"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "to_do",
+              "in_progress",
+              "done"
+            ],
+            "example": "done",
+            "default": "to_do"
+          }
+        },
+        "required": [
+          "description"
+        ]
       }
     }
   },
@@ -217,7 +154,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/PublicListData"
+                    "$ref": "#/components/schemas/ListApiModel"
                   }
                 }
               }
@@ -266,7 +203,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PublicListData"
+                  "$ref": "#/components/schemas/ListApiModel"
                 }
               }
             }
