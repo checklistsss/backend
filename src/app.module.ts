@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { ListsController } from './controllers/lists.controller'
 import { ItemsController } from './controllers/items.controller'
-import { ListsRepo, RealDynamodbDriverProvider, DynamodbDriverProvider } from './domain/repositories/listsDynamodbRepo'
+import { ListsRepo, RealDynamodbDriverProvider, DynamodbDriverProvider } from './domain/repositories/listsRepo'
 import { ListFactory } from './domain/factories/ListFactory'
 import { ItemCollectionFactory } from './domain/factories/ItemCollectionFactory'
 import { ItemFactory } from './domain/factories/ItemFactory'
@@ -12,6 +12,7 @@ import { ListApiSerializer } from './domain/serializers/api/ListApiSerializer'
 import { ItemCollectionApiSerializer } from './domain/serializers/api/ItemCollectionApiSerializer'
 import { ItemApiSerializer } from './domain/serializers/api/ItemApiSerializer'
 import { ListCollectionApiSerializer } from './domain/serializers/api/ListCollectionApiSerializer'
+import { ListCollectionFactory } from './domain/factories/ListCollectionFactory'
 
 const dynamodbProvider = {
   provide: DynamodbDriverProvider,
@@ -23,10 +24,13 @@ const dynamodbProvider = {
   controllers: [ListsController, ItemsController],
   providers: [
     dynamodbProvider,
-    ListFactory,
-    ItemCollectionFactory,
+    ListsRepo,
+
+    // Factories
     ItemFactory,
-    ListsRepo, 
+    ItemCollectionFactory,
+    ListFactory,
+    ListCollectionFactory,
 
     // Serializers
     ListDbSerializer,
