@@ -122,7 +122,33 @@
       },
       "ItemApiModel": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true,
+            "example": "3fe9780a-8847-4966-8cac-39cfcbd68e25"
+          },
+          "description": {
+            "type": "string",
+            "readOnly": true,
+            "example": "Buy spaguetti"
+          },
+          "status": {
+            "type": "string",
+            "readOnly": true,
+            "enum": [
+              "to_do",
+              "in_progress",
+              "done"
+            ],
+            "example": "done"
+          }
+        },
+        "required": [
+          "id",
+          "description",
+          "status"
+        ]
       },
       "ListApiModel": {
         "type": "object",
