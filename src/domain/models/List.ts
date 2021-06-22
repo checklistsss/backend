@@ -1,7 +1,6 @@
 import { v4 as uuid } from 'uuid'
 import { Nullable } from 'src/utils/types'
 import { CreateListPayload } from '../interfaces/CreateList.dto'
-import { PublicListData } from '../interfaces/List.dto'
 import Item from './Item'
 import ItemCollection from './ItemCollection'
 
@@ -15,10 +14,6 @@ export default class List {
 
   static fromCreateListPayload(userId: string, createListPayload: CreateListPayload) {
     return new List(uuid(), userId, createListPayload.title)
-  }
-
-  static fromJSON(list: PublicListData): List{
-    return new List(list.listId, list.userId, list.title)
   }
 
   set id(value: string) {

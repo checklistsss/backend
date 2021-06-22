@@ -7,13 +7,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { CreateListPayload } from 'src/domain/interfaces/CreateList.dto'
-import { PublicListData } from 'src/domain/interfaces/List.dto'
 import { ListApiModel } from 'src/domain/interfaces/ListApiModel.dto'
 import { ListCollectionApiModel } from 'src/domain/interfaces/ListCollectionApiModel.dto'
 import List from 'src/domain/models/List'
 import { ListApiSerializer } from 'src/domain/serializers/api/ListApiSerializer'
 import { ListCollectionApiSerializer } from 'src/domain/serializers/api/ListCollectionApiSerializer'
-import { ListsRepo } from '../domain/repositories/listsDynamodbRepo'
+import { ListsRepo } from '../domain/repositories/listsRepo'
 import { HeadersMiddleware } from '../utils/headersMiddleware'
 
 @HeadersMiddleware()
@@ -34,7 +33,7 @@ export class ListsController {
   @ApiOkResponse({
     description: 'Array of the `List` resource',
     isArray: true,
-    type: PublicListData,
+    type: ListApiModel,
   })
   async findLists(
     @Headers('x-user-id') userId: string
@@ -47,7 +46,7 @@ export class ListsController {
   @ApiOperation({ summary: 'Creates a new list' })
   @ApiCreatedResponse({
     description: 'List was succesfuly created',
-    type: PublicListData,
+    type: ListApiModel,
   })
   async createList(
     @Body() createListPayload: CreateListPayload,
