@@ -12,10 +12,6 @@ export default class List {
     private _items: ItemCollection = new ItemCollection(),
   ) {}
 
-  static fromCreateListPayload(userId: string, createListPayload: CreateListPayload) {
-    return new List(uuid(), userId, createListPayload.title)
-  }
-
   set id(value: string) {
     this._id = value
   }

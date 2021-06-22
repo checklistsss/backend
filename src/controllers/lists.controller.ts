@@ -6,6 +6,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger'
+import { ListFactory } from 'src/domain/factories/ListFactory'
 import { CreateListPayload } from 'src/domain/interfaces/CreateList.dto'
 import { ListApiModel } from 'src/domain/interfaces/ListApiModel.dto'
 import { ListCollectionApiModel } from 'src/domain/interfaces/ListCollectionApiModel.dto'
@@ -23,6 +24,7 @@ export class ListsController {
     private readonly listsRepo: ListsRepo,
     private readonly listApiSerializer: ListApiSerializer,
     private readonly listCollectionApiSerializer: ListCollectionApiSerializer,
+    private readonly listFactory: ListFactory,
   ) { }
 
   @Get()
@@ -52,7 +54,7 @@ export class ListsController {
     @Body() createListPayload: CreateListPayload,
     @Headers('x-user-id') userId: string
   ): Promise<ListApiModel> {
-    const list = List.fromCreateListPayload(userId, createListPayload)
+    const list = this.listFactory.fromCreateListApiModel(userId, createListPayload)
     await this.listsRepo.insertList(list)
 
     return this.listApiSerializer.toJSON(list)
