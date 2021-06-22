@@ -70,7 +70,24 @@ export class ListsRepo {
   }
 
   async deleteItem(listId: string, userId: string, itemId: string): Promise<List> {
-    return new List(listId, userId, "ok")
+    const { Attributes: data } = await this._driver.update({
+      Key: { userId, listId },
+      UpdateExpression: `
+        REMOVE 
+          #items.#itemId
+      `,
+      ExpressionAttributeNames: {
+        '#itemId': itemId,
+        '#items': 'items',
+      },
+      ConditionExpression: `
+        attribute_exists(#items.#itemId)
+      `,
+      ReturnValues: 'ALL_NEW',
+      TableName: 'checklists',
+    }).promise()
+
+    return this.listFactory.fromDbModel(data as ListDBModel)    
   }
 
   async findListById(listId: string, userId: string): Promise<List> {
