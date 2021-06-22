@@ -17,5 +17,5 @@ export class CreateItemPayload {
   })
   @IsOptional()
   @IsString()
-  status: ItemStatus
+  status?: ItemStatus
 }

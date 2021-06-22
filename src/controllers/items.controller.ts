@@ -12,6 +12,7 @@ import { ListsRepo } from '../domain/repositories/listsRepo'
 import { HeadersMiddleware } from 'src/utils/headersMiddleware'
 import { ListApiSerializer } from 'src/domain/serializers/api/ListApiSerializer'
 import { ListApiModel } from 'src/domain/interfaces/ListApiModel.dto'
+import { ItemFactory } from 'src/domain/factories/ItemFactory'
 
 @HeadersMiddleware()
 @Controller('lists/:listId/items')
@@ -20,6 +21,7 @@ export class ItemsController {
   constructor(
     private readonly listsRepo: ListsRepo,
     private readonly listApiSerializer: ListApiSerializer,
+    private readonly itemFactory: ItemFactory,
   ) {}
 
   @Post()
@@ -40,7 +42,7 @@ export class ItemsController {
     @Headers('x-user-id') userId: string,
     @Res({ passthrough: true }) res: Response,
   ): Promise<ListApiModel> {
-    const item = Item.fromCreateItemPayload(createItemPayload)
+    const item = this.itemFactory.fromCreateListApiModel(createItemPayload)
     const list = await this.listsRepo.insertItem(listId, userId, item)
 
     res.set('x-item-id', item.id)

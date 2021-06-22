@@ -9,10 +9,6 @@ export default class Item {
     private _status: ItemStatus = ItemStatus.TO_DO,
   ) {}
 
-  static fromCreateItemPayload(createItemPayload: CreateItemPayload) {
-    return new Item(uuid(), createItemPayload.description)
-  }
-
   set id(value: string) {
     this._id = value
   }
