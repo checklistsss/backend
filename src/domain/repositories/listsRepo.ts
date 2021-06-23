@@ -9,6 +9,7 @@ import { ListFactory } from '../factories/ListFactory'
 import { ListCollectionFactory } from '../factories/ListCollectionFactory'
 import { DbListCollection } from '../dtos/db/DbListCollection.dto'
 import { DbList } from '../dtos/db/DbList.dto'
+import ConfigProvider, { Config } from 'src/infra/env'
 
 export abstract class DynamodbDriverProvider {
   driver: DynamoDB.DocumentClient
@@ -18,14 +19,15 @@ export abstract class DynamodbDriverProvider {
 export class RealDynamodbDriverProvider implements DynamodbDriverProvider {
   private readonly _driver: DynamoDB.DocumentClient
 
-  constructor() {
+  constructor(
+    configProvider: ConfigProvider,
+  ) {
+    const { aws: { dynamoDb } } = configProvider.config
     this._driver = new DynamoDB.DocumentClient({
       apiVersion: "2012-08-10",
-      region: "eu-central-1",
-      accessKeyId: "AKIAT3KHWIR2X2UBUGWI",
-      secretAccessKey: "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",
+      region: dynamoDb.region,
       params: {
-        TableName: "checklists",
+        TableName: dynamoDb.tableName,
       }
     })
   }
@@ -38,15 +40,18 @@ export class RealDynamodbDriverProvider implements DynamodbDriverProvider {
 @Injectable()
 export class ListsRepo {
   private readonly _driver: DynamoDB.DocumentClient
+  private readonly _tableName: string
 
   constructor(
     driverProvider: DynamodbDriverProvider,
+    configProvider: ConfigProvider,
     private readonly listFactory: ListFactory,
     private readonly listCollectionFactory: ListCollectionFactory,
     private readonly listDbSerializer: ListDbSerializer,
     private readonly itemDbSerializer: ItemDbSerializer,
   ) {
     this._driver = driverProvider.driver
+    this._tableName = configProvider.config.aws.dynamoDb.tableName
   }
 
   async insertItem(listId: string, userId: string, item: Item): Promise<List> {
@@ -65,7 +70,7 @@ export class ListsRepo {
       },
       ConditionExpression: `attribute_not_exists(#items.#itemId)`,
       ReturnValues: 'ALL_NEW',
-      TableName: 'checklists',
+      TableName: this._tableName,
     }).promise()
 
     return this.listFactory.fromDbModel(data as DbList)
@@ -86,7 +91,7 @@ export class ListsRepo {
         attribute_exists(#items.#itemId)
       `,
       ReturnValues: 'ALL_NEW',
-      TableName: 'checklists',
+      TableName: this._tableName,
     }).promise()
 
     return this.listFactory.fromDbModel(data as DbList)    
@@ -94,7 +99,7 @@ export class ListsRepo {
 
   async insertList(list: List): Promise<List> {
     await this._driver.put({
-      TableName: "checklists",
+      TableName: this._tableName,
       Item: this.listDbSerializer.toJSON(list),
     }).promise()
 
@@ -103,10 +108,10 @@ export class ListsRepo {
 
   async findLists(userId: string): Promise<ListCollection> {
     const { Items: items } = await this._driver.query({
-      TableName: "checklists",
       KeyConditionExpression: '#userId = :userId',
       ExpressionAttributeNames: { '#userId': 'userId' },
       ExpressionAttributeValues: { ':userId': userId },
+      TableName: this._tableName,
     }).promise()
 
     if (!items) {
@@ -118,7 +123,7 @@ export class ListsRepo {
 
   async deleteList(userId: string, listId: string): Promise<void> {
     await this._driver.delete({
-      TableName: "checklists",
+      TableName: this._tableName,
       Key: { userId, listId },
     }).promise()
   }
