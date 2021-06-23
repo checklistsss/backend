@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid'
-import { CreateItem } from '../interfaces/CreateItem.dto'
-import { ItemDBModel } from '../interfaces/ItemDbModel.dto'
+import { ApiCreateItem } from '../dtos/api/ApiCreateItem.dto'
+import { DbItem } from '../dtos/db/DbItem.dto'
 import Item from '../models/Item'
 import { ItemStatus } from '../models/ItemStatus'
 
@@ -8,7 +8,7 @@ const isValidStatusEnumValue = (status: string): boolean =>
   Object.values(ItemStatus).includes(status as ItemStatus)
 
 export class ItemFactory {
-  fromCreateListApiModel(createItemApiModel: CreateItem) {
+  fromCreateListApiModel(createItemApiModel: ApiCreateItem) {
     const { status } =  createItemApiModel
 
     if (status && !isValidStatusEnumValue(status)) {
@@ -22,7 +22,7 @@ export class ItemFactory {
     )
   }
 
-  fromDbModel(itemDbModel: ItemDBModel) {
+  fromDbModel(itemDbModel: DbItem) {
     if (!isValidStatusEnumValue(itemDbModel.status)) {
       throw new Error(`"${itemDbModel.status}" is an invalid \`status\` enum value`)
     }

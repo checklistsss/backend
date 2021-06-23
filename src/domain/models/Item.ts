@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid'
 import { ItemStatus } from '../models/ItemStatus'
-import { CreateItem } from '../interfaces/CreateItem.dto'
+import { ApiCreateItem } from '../dtos/api/ApiCreateItem.dto'
 
 export default class Item {
   constructor(

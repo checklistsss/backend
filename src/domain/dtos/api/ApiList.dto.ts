@@ -1,8 +1,8 @@
 import { ApiResponseProperty } from '@nestjs/swagger'
-import { ItemApiModel } from './ItemApiModel.dto'
-import { ItemCollectionApiModel } from './ItemCollectionApiModel.dto'
+import { ApiItem } from './ApiItem.dto'
+import { ApiItemCollection } from './ApiItemCollection.dto'
 
-export abstract class ListApiModel {
+export abstract class ApiList {
   @ApiResponseProperty({
     example: '5e0a3c93-693f-4803-accc-6e339cf02381',
   })
@@ -19,7 +19,7 @@ export abstract class ListApiModel {
   title: string
 
   @ApiResponseProperty({
-    type: [ItemApiModel],
+    type: [ApiItem],
   })
-  items: ItemCollectionApiModel
+  items: ApiItemCollection
 }

@@ -1,7 +1,7 @@
 import { ApiResponseProperty } from "@nestjs/swagger"
-import { ItemStatus } from "../models/ItemStatus"
+import { ItemStatus } from "src/domain/models/ItemStatus"
 
-export abstract class ItemApiModel {
+export abstract class ApiItem {
   @ApiResponseProperty({
     example: '3fe9780a-8847-4966-8cac-39cfcbd68e25',
   })

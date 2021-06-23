@@ -7,9 +7,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { ListFactory } from 'src/domain/factories/ListFactory'
-import { CreateList } from 'src/domain/interfaces/CreateList.dto'
-import { ListApiModel } from 'src/domain/interfaces/ListApiModel.dto'
-import { ListCollectionApiModel } from 'src/domain/interfaces/ListCollectionApiModel.dto'
+import { ApiCreateList } from 'src/domain/dtos/api/ApiCreateList.dto'
+import { ApiList } from 'src/domain/dtos/api/ApiList.dto'
+import { ApiListCollection } from 'src/domain/dtos/api/ApiListCollection.dto'
 import { ListApiSerializer } from 'src/domain/serializers/api/ListApiSerializer'
 import { ListCollectionApiSerializer } from 'src/domain/serializers/api/ListCollectionApiSerializer'
 import { ListsRepo } from '../domain/repositories/listsRepo'
@@ -34,11 +34,11 @@ export class ListsController {
   @ApiOkResponse({
     description: 'Array of the `List` resource',
     isArray: true,
-    type: ListApiModel,
+    type: ApiList,
   })
   async findLists(
     @Headers('x-user-id') userId: string
-  ): Promise<ListCollectionApiModel> {
+  ): Promise<ApiListCollection> {
     const lists = await this.listsRepo.findLists(userId)
     return this.listCollectionApiSerializer.toJSON(lists)
   }
@@ -47,12 +47,12 @@ export class ListsController {
   @ApiOperation({ summary: 'Creates a new list' })
   @ApiCreatedResponse({
     description: 'List was succesfuly created',
-    type: ListApiModel,
+    type: ApiList,
   })
   async createList(
-    @Body() createListPayload: CreateList,
+    @Body() createListPayload: ApiCreateList,
     @Headers('x-user-id') userId: string
-  ): Promise<ListApiModel> {
+  ): Promise<ApiList> {
     const list = this.listFactory.fromCreateListApiModel(userId, createListPayload)
     await this.listsRepo.insertList(list)
 

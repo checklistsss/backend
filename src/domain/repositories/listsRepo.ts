@@ -3,12 +3,12 @@ import { Injectable } from '@nestjs/common'
 import Item from '../models/Item'
 import List from '../models/List'
 import ListCollection from '../models/ListCollection'
-import { ListDBModel } from '../interfaces/ListDBModel.dto'
 import { ListDbSerializer } from '../serializers/db/ListDbSerializer'
 import { ItemDbSerializer } from '../serializers/db/ItemDbSerializer'
 import { ListFactory } from '../factories/ListFactory'
 import { ListCollectionFactory } from '../factories/ListCollectionFactory'
-import { ListCollectionDbModel } from '../interfaces/ListCollectionDbModel.dto'
+import { DbListCollection } from '../dtos/db/DbListCollection.dto'
+import { DbList } from '../dtos/db/DbList.dto'
 
 export abstract class DynamodbDriverProvider {
   driver: DynamoDB.DocumentClient
@@ -22,8 +22,8 @@ export class RealDynamodbDriverProvider implements DynamodbDriverProvider {
     this._driver = new DynamoDB.DocumentClient({
       apiVersion: "2012-08-10",
       region: "eu-central-1",
-      accessKeyId: "123",
-      secretAccessKey: "123",
+      accessKeyId: "AKIAT3KHWIR2X2UBUGWI",
+      secretAccessKey: "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",
       params: {
         TableName: "checklists",
       }
@@ -68,7 +68,7 @@ export class ListsRepo {
       TableName: 'checklists',
     }).promise()
 
-    return this.listFactory.fromDbModel(data as ListDBModel)
+    return this.listFactory.fromDbModel(data as DbList)
   }
 
   async deleteItem(listId: string, userId: string, itemId: string): Promise<List> {
@@ -89,7 +89,7 @@ export class ListsRepo {
       TableName: 'checklists',
     }).promise()
 
-    return this.listFactory.fromDbModel(data as ListDBModel)    
+    return this.listFactory.fromDbModel(data as DbList)    
   }
 
   async insertList(list: List): Promise<List> {
@@ -113,7 +113,7 @@ export class ListsRepo {
       throw new Error('Query returned no items')
     }
 
-    return this.listCollectionFactory.fromDbCollection(items as ListCollectionDbModel)
+    return this.listCollectionFactory.fromDbCollection(items as DbListCollection)
   }
 
   async deleteList(userId: string, listId: string): Promise<void> {

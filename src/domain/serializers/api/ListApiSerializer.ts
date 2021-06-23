@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common'
-import { ListApiModel } from 'src/domain/interfaces/ListApiModel.dto'
+import { ApiList } from 'src/domain/dtos/api/ApiList.dto'
 import List from 'src/domain/models/List'
 import Serializer from '../Serializer'
 import { ItemCollectionApiSerializer } from './ItemCollectionApiSerializer'
 
 @Injectable()
-export class ListApiSerializer implements Serializer<List, ListApiModel> {
+export class ListApiSerializer implements Serializer<List, ApiList> {
   constructor(
     private readonly itemCollectionApiSerializer: ItemCollectionApiSerializer,
   ) {}
 
-  toJSON(list: List): ListApiModel {
+  toJSON(list: List): ApiList {
     return {
       id: list.id,
       userId: list.userId,

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { ListCollectionDbModel } from '../interfaces/ListCollectionDbModel.dto'
+import { DbListCollection } from '../dtos/db/DbListCollection.dto'
 import ListCollection from '../models/ListCollection'
 import { ListFactory } from './ListFactory'
 
@@ -10,7 +10,7 @@ export class ListCollectionFactory {
   ) {}
 
   fromDbCollection(
-    itemCollectionDbModel: ListCollectionDbModel
+    itemCollectionDbModel: DbListCollection
   ): ListCollection {
     const items = Object.values(itemCollectionDbModel)
       .map(i => this.listFactory.fromDbModel(i))

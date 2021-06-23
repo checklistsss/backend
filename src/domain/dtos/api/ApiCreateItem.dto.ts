@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsOptional, IsString } from 'class-validator'
-import { ItemStatus } from '../models/ItemStatus'
+import { ItemStatus } from '../../models/ItemStatus'
 
-export abstract class CreateItem {
+export abstract class ApiCreateItem {
   @ApiProperty({
     example: 'Buy spaguetti',
   })

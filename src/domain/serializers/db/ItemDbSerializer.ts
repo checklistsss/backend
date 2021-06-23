@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import { ItemDBModel } from 'src/domain/interfaces/ItemDbModel.dto'
+import { DbItem } from 'src/domain/dtos/db/DbItem.dto'
 import Item from 'src/domain/models/Item'
 import Serializer from '../Serializer'
 
 @Injectable()
-export class ItemDbSerializer implements Serializer<Item, ItemDBModel> {
-  toJSON(item: Item): ItemDBModel {
+export class ItemDbSerializer implements Serializer<Item, DbItem> {
+  toJSON(item: Item): DbItem {
     return {
       id: item.id,
       description: item.description,

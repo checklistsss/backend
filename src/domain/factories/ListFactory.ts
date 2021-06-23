@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { v4 as uuid } from 'uuid'
-import { CreateList } from '../interfaces/CreateList.dto'
-import { ListDBModel } from '../interfaces/ListDBModel.dto'
+import { ApiCreateList } from '../dtos/api/ApiCreateList.dto'
+import { DbList } from '../dtos/db/DbList.dto'
 import List from '../models/List'
 import { ItemCollectionFactory } from './ItemCollectionFactory'
 
@@ -11,7 +11,7 @@ export class ListFactory {
     private readonly itemCollectionFactory: ItemCollectionFactory,
   ) {}
 
-  fromCreateListApiModel(userId: string, createListApiModel: CreateList) {
+  fromCreateListApiModel(userId: string, createListApiModel: ApiCreateList) {
     return new List(
       uuid(),
       userId,
@@ -19,7 +19,7 @@ export class ListFactory {
     )    
   }
 
-  fromDbModel(listDbModel: ListDBModel) {
+  fromDbModel(listDbModel: DbList) {
     return new List(
       listDbModel.listId,
       listDbModel.userId,

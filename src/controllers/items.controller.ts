@@ -6,12 +6,11 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger'
-import { CreateItem } from 'src/domain/interfaces/CreateItem.dto'
-import Item from 'src/domain/models/Item'
+import { ApiCreateItem } from 'src/domain/dtos/api/ApiCreateItem.dto'
 import { ListsRepo } from '../domain/repositories/listsRepo'
 import { HeadersMiddleware } from 'src/utils/headersMiddleware'
 import { ListApiSerializer } from 'src/domain/serializers/api/ListApiSerializer'
-import { ListApiModel } from 'src/domain/interfaces/ListApiModel.dto'
+import { ApiList } from 'src/domain/dtos/api/ApiList.dto'
 import { ItemFactory } from 'src/domain/factories/ItemFactory'
 
 @HeadersMiddleware()
@@ -28,7 +27,7 @@ export class ItemsController {
   @ApiOperation({ summary: 'Adds a new item to a list' })
   @ApiCreatedResponse({
     description: 'Item was succesfuly created. The updated list is returned.',
-    type: ListApiModel,
+    type: ApiList,
     headers: {
       'x-item-id': {
         description: 'Id of the newly created item',
@@ -38,10 +37,10 @@ export class ItemsController {
   })
   async createItem(
     @Param('listId') listId: string,
-    @Body() createItemPayload: CreateItem,
+    @Body() createItemPayload: ApiCreateItem,
     @Headers('x-user-id') userId: string,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<ListApiModel> {
+  ): Promise<ApiList> {
     const item = this.itemFactory.fromCreateListApiModel(createItemPayload)
     const list = await this.listsRepo.insertItem(listId, userId, item)
 
@@ -53,13 +52,13 @@ export class ItemsController {
   @ApiOperation({ summary: 'Removes an item from a list' })
   @ApiOkResponse({
     description: 'Item was susccesfuly removed. The updated list is returned.',
-    type: ListApiModel,
+    type: ApiList,
   })
   async deleteItem(
     @Param('listId') listId: string,
     @Param('itemId') itemId: string,
     @Headers('x-user-id') userId: string,
-  ): Promise<ListApiModel> {
+  ): Promise<ApiList> {
     const list = await this.listsRepo.deleteItem(listId, userId, itemId)
     return this.listApiSerializer.toJSON(list)
   }
