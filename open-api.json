@@ -86,7 +86,7 @@
           "items"
         ]
       },
-      "CreateListPayload": {
+      "CreateList": {
         "type": "object",
         "properties": {
           "title": {
@@ -192,7 +192,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateListPayload"
+                "$ref": "#/components/schemas/CreateList"
               }
             }
           }
