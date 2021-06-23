@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid'
-import { CreateItemPayload } from '../interfaces/CreateItem.dto'
+import { CreateItem } from '../interfaces/CreateItem.dto'
 import { ItemDBModel } from '../interfaces/ItemDbModel.dto'
 import Item from '../models/Item'
 import { ItemStatus } from '../models/ItemStatus'
@@ -8,7 +8,7 @@ const isValidStatusEnumValue = (status: string): boolean =>
   Object.values(ItemStatus).includes(status as ItemStatus)
 
 export class ItemFactory {
-  fromCreateListApiModel(createItemApiModel: CreateItemPayload) {
+  fromCreateListApiModel(createItemApiModel: CreateItem) {
     const { status } =  createItemApiModel
 
     if (status && !isValidStatusEnumValue(status)) {

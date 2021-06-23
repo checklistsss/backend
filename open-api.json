@@ -98,7 +98,7 @@
           "title"
         ]
       },
-      "CreateItemPayload": {
+      "CreateItem": {
         "type": "object",
         "properties": {
           "description": {
@@ -291,7 +291,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateItemPayload"
+                "$ref": "#/components/schemas/CreateItem"
               }
             }
           }

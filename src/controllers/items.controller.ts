@@ -6,7 +6,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger'
-import { CreateItemPayload } from 'src/domain/interfaces/CreateItem.dto'
+import { CreateItem } from 'src/domain/interfaces/CreateItem.dto'
 import Item from 'src/domain/models/Item'
 import { ListsRepo } from '../domain/repositories/listsRepo'
 import { HeadersMiddleware } from 'src/utils/headersMiddleware'
@@ -38,7 +38,7 @@ export class ItemsController {
   })
   async createItem(
     @Param('listId') listId: string,
-    @Body() createItemPayload: CreateItemPayload,
+    @Body() createItemPayload: CreateItem,
     @Headers('x-user-id') userId: string,
     @Res({ passthrough: true }) res: Response,
   ): Promise<ListApiModel> {
