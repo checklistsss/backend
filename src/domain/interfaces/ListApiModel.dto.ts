@@ -2,7 +2,7 @@ import { ApiResponseProperty } from '@nestjs/swagger'
 import { ItemApiModel } from './ItemApiModel.dto'
 import { ItemCollectionApiModel } from './ItemCollectionApiModel.dto'
 
-export class ListApiModel {
+export abstract class ListApiModel {
   @ApiResponseProperty({
     example: '5e0a3c93-693f-4803-accc-6e339cf02381',
   })

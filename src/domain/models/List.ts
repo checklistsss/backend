@@ -1,6 +1,4 @@
-import { v4 as uuid } from 'uuid'
 import { Nullable } from 'src/utils/types'
-import { CreateListPayload } from '../interfaces/CreateList.dto'
 import Item from './Item'
 import ItemCollection from './ItemCollection'
 

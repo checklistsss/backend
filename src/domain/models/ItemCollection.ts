@@ -17,7 +17,7 @@ export default class ItemCollection {
   }
 
   private findIndexById(itemId: string): Nullable<number> {
-    return this._items.findIndex((i) => i.id === itemId) ?? null
+    return this._items.findIndex((i) => i.id === itemId)
   }
 
   removeById(itemId: string): void {

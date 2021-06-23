@@ -1,7 +1,7 @@
 import { IsString, IsDefined, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger'
 
-export class CreateListPayload {
+export abstract class CreateListPayload {
   @ApiProperty({
     example: 'My Groceries List',
   })
