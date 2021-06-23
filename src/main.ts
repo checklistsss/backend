@@ -48,7 +48,7 @@ async function bootstrap() {
 
   SwaggerModule.setup('docs', app, appDocs)
 
-  await app.listen(port)
+  await app.listen(port, () => console.log(`${pkg.name}@${pkg.version} listening on ${port}`))
 }
 
 bootstrap()
