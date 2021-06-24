@@ -15,7 +15,6 @@ import { ListCollectionApiSerializer } from 'src/domain/serializers/api/ListColl
 import { ListsRepo } from '../domain/repositories/listsRepo'
 import { HeadersMiddleware } from '../utils/headersMiddleware'
 
-@HeadersMiddleware()
 @Controller('lists')
 @ApiTags('lists')
 export class ListsController {

@@ -13,7 +13,6 @@ import { ListApiSerializer } from 'src/domain/serializers/api/ListApiSerializer'
 import { ApiList } from 'src/domain/dtos/api/ApiList.dto'
 import { ItemFactory } from 'src/domain/factories/ItemFactory'
 
-@HeadersMiddleware()
 @Controller('lists/:listId/items')
 @ApiTags('items')
 export class ItemsController {
