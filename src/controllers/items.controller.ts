@@ -1,5 +1,5 @@
 import { Response } from 'express'
-import { Body, Controller, Delete, Param, Post, Res, Headers } from '@nestjs/common'
+import { Body, Controller, Delete, Param, Post, Res, Headers, Patch } from '@nestjs/common'
 import {
   ApiCreatedResponse,
   ApiOkResponse,
@@ -12,6 +12,7 @@ import { HeadersMiddleware } from 'src/utils/headersMiddleware'
 import { ListApiSerializer } from 'src/domain/serializers/api/ListApiSerializer'
 import { ApiList } from 'src/domain/dtos/api/ApiList.dto'
 import { ItemFactory } from 'src/domain/factories/ItemFactory'
+import { ApiPatchItem } from 'src/domain/dtos/api/ApiPatchItem.dto'
 
 @Controller('lists/:listId/items')
 @ApiTags('items')
@@ -59,6 +60,28 @@ export class ItemsController {
     @Headers('x-user-id') userId: string,
   ): Promise<ApiList> {
     const list = await this.listsRepo.deleteItem(listId, userId, itemId)
+    return this.listApiSerializer.toJSON(list)
+  }
+
+  @Patch(':itemId')
+  @ApiOperation({ summary: 'Allows to patch individual properties of an item. Use this operation to mark an items as `done`. All fields are optional.' })
+  @ApiOkResponse({
+    description: 'Item was susccesfuly patched. The updated list is returned.',
+    type: ApiList,
+  })
+  async patchItem(
+    @Param('listId') listId: string,
+    @Param('itemId') itemId: string,
+    @Headers('x-user-id') userId: string,
+    @Body() patchData: ApiPatchItem,
+  ): Promise<ApiList> {
+    const list = await this.listsRepo.patchItem(
+      userId,
+      listId,
+      itemId,
+      patchData
+    )
+
     return this.listApiSerializer.toJSON(list)
   }
 }

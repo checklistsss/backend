@@ -11,6 +11,7 @@ export abstract class ApiCreateItem {
 
   @ApiProperty({
     enum: ItemStatus,
+    enumName: 'ItemStatus',
     example: ItemStatus.DONE,
     default: ItemStatus.TO_DO,
     required: false,
