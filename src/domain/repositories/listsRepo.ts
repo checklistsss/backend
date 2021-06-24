@@ -11,6 +11,7 @@ import { DbListCollection } from '../dtos/db/DbListCollection.dto'
 import { DbList } from '../dtos/db/DbList.dto'
 import ConfigProvider from 'src/infra/env'
 import DbItemPatchData from '../dtos/db/DbItemPatch.dto'
+import DbListPatchData from '../dtos/db/DbListPatchData.dto'
 
 type KeyMap = DynamoDB.DocumentClient.ExpressionAttributeNameMap
 type ValueMap = DynamoDB.DocumentClient.ExpressionAttributeValueMap
@@ -56,6 +57,33 @@ export class ListsRepo {
   ) {
     this._driver = driverProvider.driver
     this._tableName = configProvider.config.aws.dynamoDb.tableName
+  }
+
+  async patchList(
+    userId: string, 
+    listId: string,
+    listPatchData: DbListPatchData,
+  ): Promise<List> {
+    const values: ValueMap = {}
+    const keys: KeyMap = {}
+  
+    const expressions = [] 
+    for(const [key, value] of Object.entries(listPatchData)) {
+      expressions.push(`#${key} = :${key}`)
+      keys[`#${key}`] = key
+      values[`:${key}`] = value
+    }
+
+    const { Attributes: data } = await this._driver.update({
+      Key: { userId, listId },
+      UpdateExpression: `SET ${expressions.join(', ')}`,
+      ExpressionAttributeNames: keys,
+      ExpressionAttributeValues: values,
+      ReturnValues: 'ALL_NEW',
+      TableName: this._tableName,
+    }).promise()
+
+    return this.listFactory.fromDbModel(data as DbList)
   }
 
   async patchItem(
