@@ -98,6 +98,15 @@
           "title"
         ]
       },
+      "ApiPatchList": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Italian dinner checklist"
+          }
+        }
+      },
       "ItemStatus": {
         "type": "string",
         "enum": [
@@ -241,6 +250,53 @@
         "responses": {
           "204": {
             "description": "List was succesfuly deleted"
+          }
+        },
+        "tags": [
+          "lists"
+        ]
+      },
+      "patch": {
+        "operationId": "patchItem",
+        "summary": "Allows to patch individual properties of a list. All fields are optional.",
+        "parameters": [
+          {
+            "name": "listId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiPatchList"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List was susccesfuly patched. The updated list is returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiList"
+                }
+              }
+            }
           }
         },
         "tags": [
