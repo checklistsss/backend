@@ -9,7 +9,11 @@ import { ListFactory } from '../factories/ListFactory'
 import { ListCollectionFactory } from '../factories/ListCollectionFactory'
 import { DbListCollection } from '../dtos/db/DbListCollection.dto'
 import { DbList } from '../dtos/db/DbList.dto'
-import ConfigProvider, { Config } from 'src/infra/env'
+import ConfigProvider from 'src/infra/env'
+import DbItemPatchData from '../dtos/db/DbItemPatch.dto'
+
+type KeyMap = DynamoDB.DocumentClient.ExpressionAttributeNameMap
+type ValueMap = DynamoDB.DocumentClient.ExpressionAttributeValueMap
 
 export abstract class DynamodbDriverProvider {
   driver: DynamoDB.DocumentClient
@@ -52,6 +56,38 @@ export class ListsRepo {
   ) {
     this._driver = driverProvider.driver
     this._tableName = configProvider.config.aws.dynamoDb.tableName
+  }
+
+  async patchItem(
+    userId: string, 
+    listId: string,
+    itemId: string,
+    itemPatchData: DbItemPatchData
+  ): Promise<List> {
+    const values: ValueMap = {}
+    const keys: KeyMap = {
+      '#itemId': itemId,
+      '#items': 'items',
+    }
+  
+    const expressions = [] 
+    for(const [key, value] of Object.entries(itemPatchData)) {
+      expressions.push(`#items.#itemId.#${key} = :${key}`)
+      keys[`#${key}`] = key
+      values[`:${key}`] = value
+    }
+
+    const { Attributes: data } = await this._driver.update({
+      Key: { userId, listId },
+      UpdateExpression: `SET ${expressions.join(', ')}`,
+      ExpressionAttributeNames: keys,
+      ExpressionAttributeValues: values,
+      ConditionExpression: `attribute_exists(#items.#itemId)`,
+      ReturnValues: 'ALL_NEW',
+      TableName: this._tableName,
+    }).promise()
+
+    return this.listFactory.fromDbModel(data as DbList)
   }
 
   async insertItem(listId: string, userId: string, item: Item): Promise<List> {
