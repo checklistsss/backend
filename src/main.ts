@@ -10,6 +10,7 @@ import * as path from 'path'
 import { Env } from '@humanwhocodes/env'
 
 import { AppModule } from './app.module'
+import ExceptionHandlingFilter from './filters/ExceptionHandlingFilter'
 
 const pkg = require('../package.json')
 const env = new Env()
@@ -17,6 +18,7 @@ const port = env.get('PORT', '3000')
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+  app.useGlobalFilters(new ExceptionHandlingFilter())
   app.useGlobalPipes(new ValidationPipe({
     validationError: {
       value: false
