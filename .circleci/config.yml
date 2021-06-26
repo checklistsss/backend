@@ -1,20 +1,19 @@
 version: 2.1
 orbs:
-  node: circleci/node@4.5.1
+  node: circleci/node@4.1
 jobs:
   test:
     executor:
       name: node/default
     docker:
       - image: amazon/dynamodb-local:latest
+      - image: cimg/node:14.17.1
     steps:
       - checkout
       - setup_remote_docker
-      - restore_cache
 
-      - run:
-          command: yarn
-          name: Install dependencies
+      - node/install-packages:
+          pkg-manager: yarn
 
       - run:
           command: yarn lint
