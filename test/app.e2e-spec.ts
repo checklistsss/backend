@@ -24,7 +24,7 @@ export class LocalDynamodbDriverProvider implements DynamodbDriverProvider {
     const params = {
       apiVersion: '2012-08-10',
       region: dynamoDb.region,
-      endpoint: new Endpoint('http://localhost:8687'),
+      endpoint: new Endpoint('http://localhost:8000'),
       params: {
         TableName: dynamoDb.tableName,
       },
