@@ -91,7 +91,7 @@ describe('List API', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({
-          envFilePath: join(__dirname, '.development.env'),
+          envFilePath: join(__dirname, '.test.env'),
         }),
         AppModule,
       ],
