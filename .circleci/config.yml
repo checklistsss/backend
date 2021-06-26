@@ -1,0 +1,60 @@
+version: 2.1
+orbs:
+  node: circleci/node@1.1.6
+jobs:
+  test:
+    executor:
+      name: node/default
+    docker:
+      - image: renatoargh/circleci-node-awscli
+      - image: amazon/dynamodb-local:latest
+    steps:
+      - checkout
+      - node/with-cache:
+          steps:
+            - setup_remote_docker
+
+            - run:
+                command: yarn
+                name: Install dependencies
+
+            - run:
+                command: yarn lint
+                name: Run linter
+
+            - run:
+                command: yarn build
+                name: Build code
+
+            - run:
+                command: test:e2e
+                name: Run unit and integration tests
+
+            # - run:
+            #     command: curl https://cli-assets.heroku.com/install.sh | sh
+            #     name: Install Heroku CLI
+
+            # - run:
+            #     command: heroku container:login
+            #     name: Login to Heroku Docker image registry
+
+            # - run:
+            #     command: heroku container:push -a $HEROKU_APP_NAME web --arg USER_POOL_URL=$USER_POOL_URL
+            #     name: Push Docker image to Heroku
+
+            # - run:
+            #     command: yarn start-database-instance
+            #     name: Starting DB instance if necessary
+
+            # - run:
+            #     command: yarn migrate:db
+            #     name: Migrate database
+
+            # - run:
+            #     command: heroku container:release -a $HEROKU_APP_NAME web
+            #     name: Release Docker image on Heroku
+
+workflows:
+  build-test-deploy:
+    jobs:
+      - test
