@@ -9,7 +9,7 @@ import { ListFactory } from '../factories/ListFactory'
 import { ListCollectionFactory } from '../factories/ListCollectionFactory'
 import { DbListCollection } from '../dtos/db/DbListCollection.dto'
 import { DbList } from '../dtos/db/DbList.dto'
-import ConfigProvider from 'src/infra/env'
+import ConfigProvider from '../../infra/env'
 import DbItemPatchData from '../dtos/db/DbItemPatch.dto'
 import DbListPatchData from '../dtos/db/DbListPatchData.dto'
 

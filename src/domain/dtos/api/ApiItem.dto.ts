@@ -1,5 +1,5 @@
-import { ApiResponseProperty } from "@nestjs/swagger"
-import { ItemStatus } from "src/domain/models/ItemStatus"
+import { ApiResponseProperty } from '@nestjs/swagger'
+import { ItemStatus } from '../../models/ItemStatus'
 
 export abstract class ApiItem {
   @ApiResponseProperty({

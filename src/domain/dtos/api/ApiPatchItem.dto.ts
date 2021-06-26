@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsOptional } from 'class-validator'
-import { ItemStatus } from 'src/domain/models/ItemStatus'
+import { ItemStatus } from '../../models/ItemStatus'
 
 export abstract class ApiPatchItem {
   @ApiProperty({

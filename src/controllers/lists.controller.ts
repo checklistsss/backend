@@ -6,13 +6,13 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger'
-import { ListFactory } from 'src/domain/factories/ListFactory'
-import { ApiCreateList } from 'src/domain/dtos/api/ApiCreateList.dto'
-import { ApiPatchList } from 'src/domain/dtos/api/ApiPatchList.dto'
-import { ApiList } from 'src/domain/dtos/api/ApiList.dto'
-import { ApiListCollection } from 'src/domain/dtos/api/ApiListCollection.dto'
-import { ListApiSerializer } from 'src/domain/serializers/api/ListApiSerializer'
-import { ListCollectionApiSerializer } from 'src/domain/serializers/api/ListCollectionApiSerializer'
+import { ListFactory } from '../domain/factories/ListFactory'
+import { ApiCreateList } from '../domain/dtos/api/ApiCreateList.dto'
+import { ApiPatchList } from '../domain/dtos/api/ApiPatchList.dto'
+import { ApiList } from '../domain/dtos/api/ApiList.dto'
+import { ApiListCollection } from '../domain/dtos/api/ApiListCollection.dto'
+import { ListApiSerializer } from '../domain/serializers/api/ListApiSerializer'
+import { ListCollectionApiSerializer } from '../domain/serializers/api/ListCollectionApiSerializer'
 import { ListsRepo } from '../domain/repositories/listsRepo'
 
 @Controller('lists')

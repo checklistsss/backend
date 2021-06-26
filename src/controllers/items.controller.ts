@@ -6,13 +6,12 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger'
-import { ApiCreateItem } from 'src/domain/dtos/api/ApiCreateItem.dto'
+import { ApiCreateItem } from '../domain/dtos/api/ApiCreateItem.dto'
 import { ListsRepo } from '../domain/repositories/listsRepo'
-import { HeadersMiddleware } from 'src/utils/headersMiddleware'
-import { ListApiSerializer } from 'src/domain/serializers/api/ListApiSerializer'
-import { ApiList } from 'src/domain/dtos/api/ApiList.dto'
-import { ItemFactory } from 'src/domain/factories/ItemFactory'
-import { ApiPatchItem } from 'src/domain/dtos/api/ApiPatchItem.dto'
+import { ListApiSerializer } from '../domain/serializers/api/ListApiSerializer'
+import { ApiList } from '../domain/dtos/api/ApiList.dto'
+import { ItemFactory } from '../domain/factories/ItemFactory'
+import { ApiPatchItem } from '../domain/dtos/api/ApiPatchItem.dto'
 
 @Controller('lists/:listId/items')
 @ApiTags('items')
