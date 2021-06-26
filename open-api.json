@@ -175,6 +175,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Operation not successful due to bad input data"
+          },
+          "500": {
+            "description": "Unexpected error happened"
           }
         },
         "tags": [
@@ -214,6 +220,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Operation not successful due to bad input data"
+          },
+          "500": {
+            "description": "Unexpected error happened"
           }
         },
         "tags": [
@@ -246,6 +258,12 @@
         "responses": {
           "204": {
             "description": "List was succesfuly deleted"
+          },
+          "400": {
+            "description": "Operation not successful due to bad input data"
+          },
+          "500": {
+            "description": "Unexpected error happened"
           }
         },
         "tags": [
@@ -293,6 +311,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Operation not successful due to bad input data"
+          },
+          "500": {
+            "description": "Unexpected error happened"
           }
         },
         "tags": [
@@ -348,6 +372,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Operation not successful due to bad input data"
+          },
+          "500": {
+            "description": "Unexpected error happened"
           }
         },
         "tags": [
@@ -395,6 +425,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Operation not successful due to bad input data"
+          },
+          "500": {
+            "description": "Unexpected error happened"
           }
         },
         "tags": [
@@ -450,6 +486,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Operation not successful due to bad input data"
+          },
+          "500": {
+            "description": "Unexpected error happened"
           }
         },
         "tags": [

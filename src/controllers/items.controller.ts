@@ -9,12 +9,16 @@ import {
   Headers,
   Patch,
 } from '@nestjs/common'
+
 import {
+  ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger'
+
 import { ApiCreateItem } from '../domain/dtos/api/ApiCreateItem.dto'
 import { ListsRepo } from '../domain/repositories/listsRepo'
 import { ListApiSerializer } from '../domain/serializers/api/ListApiSerializer'
@@ -24,6 +28,12 @@ import { ApiPatchItem } from '../domain/dtos/api/ApiPatchItem.dto'
 
 @Controller('lists/:listId/items')
 @ApiTags('items')
+@ApiInternalServerErrorResponse({
+  description: 'Unexpected error happened',
+})
+@ApiBadRequestResponse({
+  description: 'Operation not successful due to bad input data',
+})
 export class ItemsController {
   constructor(
     private readonly listsRepo: ListsRepo,

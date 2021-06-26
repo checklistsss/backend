@@ -12,7 +12,9 @@ import { Env } from '@humanwhocodes/env'
 import { AppModule } from './app.module'
 import ExceptionHandlingFilter from './filters/ExceptionHandlingFilter'
 
-const pkg = JSON.parse(fs.readFileSync('../package.json', 'utf-8'))
+const pkgPath = path.join(process.cwd(), '/package.json')
+const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
+
 const env = new Env()
 const port = env.get('PORT', '3000')
 

@@ -9,7 +9,9 @@ import {
   Patch,
 } from '@nestjs/common'
 import {
+  ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
@@ -26,6 +28,12 @@ import { ListsRepo } from '../domain/repositories/listsRepo'
 
 @Controller('lists')
 @ApiTags('lists')
+@ApiInternalServerErrorResponse({
+  description: 'Unexpected error happened',
+})
+@ApiBadRequestResponse({
+  description: 'Operation not successful due to bad input data',
+})
 export class ListsController {
   constructor(
     private readonly listsRepo: ListsRepo,
@@ -65,8 +73,8 @@ export class ListsController {
       userId,
       createListPayload,
     )
-    await this.listsRepo.insertList(list)
 
+    await this.listsRepo.insertList(list)
     return this.listApiSerializer.toJSON(list)
   }
 
