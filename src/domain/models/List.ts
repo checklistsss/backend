@@ -10,19 +10,19 @@ export default class List {
     private readonly _items: ItemCollection = new ItemCollection(),
   ) {}
 
-  get id() {
+  get id(): string {
     return this._id
   }
 
-  get userId() {
+  get userId(): string {
     return this._userId
   }
 
-  get title() {
+  get title(): string {
     return this._title
   }
 
-  get items() {
+  get items(): ItemCollection {
     return this._items
   }
 

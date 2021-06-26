@@ -1,4 +1,4 @@
-import { IsString, IsDefined, IsNotEmpty } from 'class-validator';
+import { IsString, IsDefined, IsNotEmpty } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 export abstract class ApiCreateList {
@@ -6,7 +6,7 @@ export abstract class ApiCreateList {
     example: 'My Groceries List',
   })
   @IsDefined({
-    message: 'title is required'
+    message: 'title is required',
   })
   @IsNotEmpty()
   @IsString()

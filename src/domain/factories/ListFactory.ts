@@ -7,19 +7,16 @@ import { ItemCollectionFactory } from './ItemCollectionFactory'
 
 @Injectable()
 export class ListFactory {
-  constructor(
-    private readonly itemCollectionFactory: ItemCollectionFactory,
-  ) {}
+  constructor(private readonly itemCollectionFactory: ItemCollectionFactory) {}
 
-  fromCreateListApiModel(userId: string, createListApiModel: ApiCreateList) {
-    return new List(
-      uuid(),
-      userId,
-      createListApiModel.title,
-    )    
+  fromCreateListApiModel(
+    userId: string,
+    createListApiModel: ApiCreateList,
+  ): List {
+    return new List(uuid(), userId, createListApiModel.title)
   }
 
-  fromDbModel(listDbModel: DbList) {
+  fromDbModel(listDbModel: DbList): List {
     return new List(
       listDbModel.listId,
       listDbModel.userId,

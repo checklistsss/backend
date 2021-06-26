@@ -1,4 +1,13 @@
-import { Headers, Body, Controller, Get, Post, Delete, Param, Patch } from '@nestjs/common'
+import {
+  Headers,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Param,
+  Patch,
+} from '@nestjs/common'
 import {
   ApiCreatedResponse,
   ApiNoContentResponse,
@@ -23,7 +32,7 @@ export class ListsController {
     private readonly listApiSerializer: ListApiSerializer,
     private readonly listCollectionApiSerializer: ListCollectionApiSerializer,
     private readonly listFactory: ListFactory,
-  ) { }
+  ) {}
 
   @Get()
   @ApiOperation({
@@ -36,7 +45,7 @@ export class ListsController {
     type: ApiList,
   })
   async findLists(
-    @Headers('x-user-id') userId: string
+    @Headers('x-user-id') userId: string,
   ): Promise<ApiListCollection> {
     const lists = await this.listsRepo.findLists(userId)
     return this.listCollectionApiSerializer.toJSON(lists)
@@ -50,9 +59,12 @@ export class ListsController {
   })
   async createList(
     @Body() createListPayload: ApiCreateList,
-    @Headers('x-user-id') userId: string
+    @Headers('x-user-id') userId: string,
   ): Promise<ApiList> {
-    const list = this.listFactory.fromCreateListApiModel(userId, createListPayload)
+    const list = this.listFactory.fromCreateListApiModel(
+      userId,
+      createListPayload,
+    )
     await this.listsRepo.insertList(list)
 
     return this.listApiSerializer.toJSON(list)
@@ -65,13 +77,16 @@ export class ListsController {
   })
   async deleteList(
     @Param('listId') listId: string,
-    @Headers('x-user-id') userId: string
+    @Headers('x-user-id') userId: string,
   ): Promise<void> {
     await this.listsRepo.deleteList(userId, listId)
   }
 
   @Patch(':listId')
-  @ApiOperation({ summary: 'Allows to patch individual properties of a list. All fields are optional.' })
+  @ApiOperation({
+    summary:
+      'Allows to patch individual properties of a list. All fields are optional.',
+  })
   @ApiOkResponse({
     description: 'List was susccesfuly patched. The updated list is returned.',
     type: ApiList,
@@ -81,12 +96,8 @@ export class ListsController {
     @Headers('x-user-id') userId: string,
     @Body() patchData: ApiPatchList,
   ): Promise<ApiList> {
-    const list = await this.listsRepo.patchList(
-      userId,
-      listId,
-      patchData,
-    )
+    const list = await this.listsRepo.patchList(userId, listId, patchData)
 
     return this.listApiSerializer.toJSON(list)
-  }  
+  }
 }

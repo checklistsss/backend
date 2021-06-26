@@ -3,7 +3,9 @@ import ItemCollection from 'src/domain/models/ItemCollection'
 import Serializer from '../Serializer'
 import { ItemDbSerializer } from './ItemDbSerializer'
 
-export class ItemCollectionDbSerializer implements Serializer<ItemCollection, DbItemCollection> {
+export class ItemCollectionDbSerializer
+  implements Serializer<ItemCollection, DbItemCollection>
+{
   constructor(private readonly itemDbSerializer: ItemDbSerializer) {}
 
   toJSON(itemCollection: ItemCollection): DbItemCollection {

@@ -1,5 +1,14 @@
 import { Response } from 'express'
-import { Body, Controller, Delete, Param, Post, Res, Headers, Patch } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  Res,
+  Headers,
+  Patch,
+} from '@nestjs/common'
 import {
   ApiCreatedResponse,
   ApiOkResponse,
@@ -63,7 +72,10 @@ export class ItemsController {
   }
 
   @Patch(':itemId')
-  @ApiOperation({ summary: 'Allows to patch individual properties of an item. Use this operation to mark an items as `done`. All fields are optional.' })
+  @ApiOperation({
+    summary:
+      'Allows to patch individual properties of an item. Use this operation to mark an items as `done`. All fields are optional.',
+  })
   @ApiOkResponse({
     description: 'Item was susccesfuly patched. The updated list is returned.',
     type: ApiList,
@@ -78,7 +90,7 @@ export class ItemsController {
       userId,
       listId,
       itemId,
-      patchData
+      patchData,
     )
 
     return this.listApiSerializer.toJSON(list)

@@ -5,15 +5,12 @@ import { ListFactory } from './ListFactory'
 
 @Injectable()
 export class ListCollectionFactory {
-  constructor(
-    private readonly listFactory: ListFactory,
-  ) {}
+  constructor(private readonly listFactory: ListFactory) {}
 
-  fromDbCollection(
-    itemCollectionDbModel: DbListCollection
-  ): ListCollection {
-    const items = Object.values(itemCollectionDbModel)
-      .map(i => this.listFactory.fromDbModel(i))
+  fromDbCollection(itemCollectionDbModel: DbListCollection): ListCollection {
+    const items = Object.values(itemCollectionDbModel).map((i) =>
+      this.listFactory.fromDbModel(i),
+    )
 
     return new ListCollection(items)
   }

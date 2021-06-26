@@ -4,27 +4,25 @@ import { DbItem } from '../dtos/db/DbItem.dto'
 import Item from '../models/Item'
 import { ItemStatus } from '../models/ItemStatus'
 
-const isValidStatusEnumValue = (status: string): boolean => 
+const isValidStatusEnumValue = (status: string): boolean =>
   Object.values(ItemStatus).includes(status as ItemStatus)
 
 export class ItemFactory {
-  fromCreateListApiModel(createItemApiModel: ApiCreateItem) {
-    const { status } =  createItemApiModel
+  fromCreateListApiModel(createItemApiModel: ApiCreateItem): Item {
+    const { status } = createItemApiModel
 
     if (status && !isValidStatusEnumValue(status)) {
       throw new Error(`"${status}" is an invalid \`status\` enum value`)
     }
-    
-    return new Item(
-      uuid(),
-      createItemApiModel.description,
-      status,
-    )
+
+    return new Item(uuid(), createItemApiModel.description, status)
   }
 
-  fromDbModel(itemDbModel: DbItem) {
+  fromDbModel(itemDbModel: DbItem): Item {
     if (!isValidStatusEnumValue(itemDbModel.status)) {
-      throw new Error(`"${itemDbModel.status}" is an invalid \`status\` enum value`)
+      throw new Error(
+        `"${itemDbModel.status}" is an invalid \`status\` enum value`,
+      )
     }
 
     return new Item(

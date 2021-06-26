@@ -1,5 +1,5 @@
 type DbListPatchData = Partial<{
-  title: string,
+  title: string
 }>
 
 export default DbListPatchData

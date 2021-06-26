@@ -1,6 +1,4 @@
-import { v4 as uuid } from 'uuid'
 import { ItemStatus } from '../models/ItemStatus'
-import { ApiCreateItem } from '../dtos/api/ApiCreateItem.dto'
 
 export default class Item {
   constructor(
@@ -9,15 +7,15 @@ export default class Item {
     private readonly _status: ItemStatus = ItemStatus.TO_DO,
   ) {}
 
-  get id() {
+  get id(): string {
     return this._id
   }
 
-  get description() {
+  get description(): string {
     return this._description
   }
 
-  get status() {
+  get status(): string {
     return this._status
   }
 }

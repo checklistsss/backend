@@ -8,7 +8,7 @@ export default class ListCollection {
     return [...this._lists]
   }
 
-  add(item: List) {
+  add(item: List): void {
     this._lists.push(item)
   }
 

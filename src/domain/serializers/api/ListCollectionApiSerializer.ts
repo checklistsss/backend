@@ -5,7 +5,9 @@ import Serializer from '../Serializer'
 import { ListApiSerializer } from './ListApiSerializer'
 
 @Injectable()
-export class ListCollectionApiSerializer implements Serializer<ListCollection, ApiListCollection> {
+export class ListCollectionApiSerializer
+  implements Serializer<ListCollection, ApiListCollection>
+{
   constructor(private readonly listSerializer: ListApiSerializer) {}
 
   toJSON(listCollection: ListCollection): ApiListCollection {

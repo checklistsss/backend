@@ -12,21 +12,23 @@ import { Env } from '@humanwhocodes/env'
 import { AppModule } from './app.module'
 import ExceptionHandlingFilter from './filters/ExceptionHandlingFilter'
 
-const pkg = require('../package.json')
+const pkg = JSON.parse(fs.readFileSync('../package.json', 'utf-8'))
 const env = new Env()
 const port = env.get('PORT', '3000')
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
   app.useGlobalFilters(new ExceptionHandlingFilter())
-  app.useGlobalPipes(new ValidationPipe({
-    validationError: {
-      value: false
-    },
-    skipMissingProperties: false,
-    whitelist: true,
-    forbidNonWhitelisted: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      validationError: {
+        value: false,
+      },
+      skipMissingProperties: false,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  )
 
   const config = new DocumentBuilder()
     .setTitle(pkg.name)
@@ -50,7 +52,9 @@ async function bootstrap() {
 
   SwaggerModule.setup('docs', app, appDocs)
 
-  await app.listen(port, () => console.log(`${pkg.name}@${pkg.version} listening on ${port}`))
+  await app.listen(port, () =>
+    console.log(`${pkg.name}@${pkg.version} listening on ${port}`),
+  )
 }
 
 bootstrap()

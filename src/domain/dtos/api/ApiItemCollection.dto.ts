@@ -1,3 +1,3 @@
-import { ApiItem } from './ApiItem.dto';
+import { ApiItem } from './ApiItem.dto'
 
 export type ApiItemCollection = ApiItem[]

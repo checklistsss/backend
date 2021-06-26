@@ -15,11 +15,11 @@ export class LocalDynamodbDriverProvider implements DynamodbDriverProvider {
   private readonly _config: Config
   private _isInitializaed = false
 
-  constructor(
-    configProvider: ConfigProvider,
-  ) {
+  constructor(configProvider: ConfigProvider) {
     this._config = configProvider.config
-    const { aws: { dynamoDb } } = this._config
+    const {
+      aws: { dynamoDb },
+    } = this._config
 
     const params = {
       apiVersion: '2012-08-10',
@@ -27,43 +27,56 @@ export class LocalDynamodbDriverProvider implements DynamodbDriverProvider {
       endpoint: new Endpoint('http://localhost:8687'),
       params: {
         TableName: dynamoDb.tableName,
-      }
+      },
     }
-    
+
     this._documentClient = new DynamoDB.DocumentClient(params)
-    this._dynamodbClient = new DynamoDB(params)    
+    this._dynamodbClient = new DynamoDB(params)
   }
 
-  async init() {
+  async init(): Promise<void> {
     if (this._isInitializaed) {
       return
     }
 
-    await this._dynamodbClient.deleteTable({
-      TableName: this._config.aws.dynamoDb.tableName,
-    }).promise().catch(() => {})
+    await this._dynamodbClient
+      .deleteTable({
+        TableName: this._config.aws.dynamoDb.tableName,
+      })
+      .promise()
+      .catch(() => {
+        // ignore delete errors
+      })
 
-    await this._dynamodbClient.createTable({
-      TableName: this._config.aws.dynamoDb.tableName,
-      AttributeDefinitions: [{
-        AttributeName: 'userId',
-        AttributeType: 'S'
-      }, {
-        AttributeName: 'listId',
-        AttributeType: 'S'
-      }],
-      KeySchema: [{
-        AttributeName: 'userId',
-        KeyType: 'HASH'
-      }, {
-        AttributeName: 'listId',
-        KeyType: 'RANGE'
-      }],
-      ProvisionedThroughput: {
-        ReadCapacityUnits: 5,
-        WriteCapacityUnits: 5
-      },
-    }).promise()
+    await this._dynamodbClient
+      .createTable({
+        TableName: this._config.aws.dynamoDb.tableName,
+        AttributeDefinitions: [
+          {
+            AttributeName: 'userId',
+            AttributeType: 'S',
+          },
+          {
+            AttributeName: 'listId',
+            AttributeType: 'S',
+          },
+        ],
+        KeySchema: [
+          {
+            AttributeName: 'userId',
+            KeyType: 'HASH',
+          },
+          {
+            AttributeName: 'listId',
+            KeyType: 'RANGE',
+          },
+        ],
+        ProvisionedThroughput: {
+          ReadCapacityUnits: 5,
+          WriteCapacityUnits: 5,
+        },
+      })
+      .promise()
   }
 
   get driver(): DynamoDB.DocumentClient {
@@ -87,7 +100,9 @@ describe('List API', () => {
       .useClass(LocalDynamodbDriverProvider)
       .compile()
 
-    const localDynamoDb = moduleFixture.get(DynamodbDriverProvider) as LocalDynamodbDriverProvider
+    const localDynamoDb = moduleFixture.get(
+      DynamodbDriverProvider,
+    ) as LocalDynamodbDriverProvider
     await localDynamoDb.init()
 
     app = moduleFixture.createNestApplication()

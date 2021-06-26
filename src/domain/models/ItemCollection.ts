@@ -4,7 +4,7 @@ import Item from './Item'
 export default class ItemCollection {
   constructor(private readonly _items: Item[] = []) {}
 
-  add(item: Item) {
+  add(item: Item): void {
     this._items.push(item)
   }
 

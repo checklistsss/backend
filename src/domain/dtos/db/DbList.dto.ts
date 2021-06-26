@@ -1,7 +1,7 @@
-import { DbItemCollection } from './DbItemCollection.dto';
+import { DbItemCollection } from './DbItemCollection.dto'
 
 export abstract class DbList {
-  listId: string 
+  listId: string
   userId: string
   title: string
   items: DbItemCollection

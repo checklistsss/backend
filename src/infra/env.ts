@@ -4,16 +4,16 @@ import { Injectable } from '@nestjs/common'
 const env = new Env()
 
 export type DynamoDBConfig = {
-  tableName: string,
-  region: string,
+  tableName: string
+  region: string
 }
 
 export type AwsConfig = {
-  dynamoDb: DynamoDBConfig,
+  dynamoDb: DynamoDBConfig
 }
 
 export type Config = {
-  aws: AwsConfig,
+  aws: AwsConfig
 }
 
 @Injectable()
@@ -29,8 +29,8 @@ export default class ConfigProvider {
         dynamoDb: {
           tableName: env.require('AWS_DYNAMODB_TABLE'),
           region: env.require('AWS_DYNAMODB_REGION'),
-        }
-      }
+        },
+      },
     }
   }
 
