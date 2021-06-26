@@ -6,25 +6,19 @@ jobs:
     executor:
       name: node/default
     docker:
+      - image: cimg/node:lts
       - image: amazon/dynamodb-local:latest
-      - image: cimg/node:14.17.1
     steps:
       - checkout
       - setup_remote_docker
-
-      - node/install-packages:
-          pkg-manager: yarn
+      - node/install-packages
 
       - run:
-          command: yarn lint
+          command: npm run lint
           name: Run linter
 
       - run:
-          command: yarn build
-          name: Build code
-
-      - run:
-          command: test:e2e
+          command: npm run test:e2e
           name: Run unit and integration tests
 
       # - run:
@@ -40,11 +34,11 @@ jobs:
       #     name: Push Docker image to Heroku
 
       # - run:
-      #     command: yarn start-database-instance
+      #     command: npm run start-database-instance
       #     name: Starting DB instance if necessary
 
       # - run:
-      #     command: yarn migrate:db
+      #     command: npm run migrate:db
       #     name: Migrate database
 
       # - run:
