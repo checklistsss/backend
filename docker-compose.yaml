@@ -1,0 +1,7 @@
+version: "2.1"
+services:
+  db:
+    container_name: dynamodb-local
+    image: amazon/dynamodb-local:latest
+    ports:
+        - 8687:8000
