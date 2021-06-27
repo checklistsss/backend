@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsOptional } from 'class-validator'
 import { ItemStatus } from '../../models/ItemStatus'
 
 export abstract class ApiPatchItem {
@@ -7,7 +6,6 @@ export abstract class ApiPatchItem {
     example: 'Buy tortellini',
     required: false,
   })
-  @IsOptional()
   description?: string
 
   @ApiProperty({
@@ -16,6 +14,5 @@ export abstract class ApiPatchItem {
     example: ItemStatus.IN_PROGRESS,
     required: false,
   })
-  @IsOptional()
   status: string
 }
