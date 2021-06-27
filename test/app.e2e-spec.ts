@@ -116,5 +116,20 @@ describe('List API', () => {
         .send({ title: 'My List' })
         .expect(201)
     })
+
+    it('should require at least a title to create a list', async () => {
+      const { body } = await request(app.getHttpServer())
+        .post('/lists')
+        .set('x-user-id', '123')
+        .send({})
+        .expect(400)
+
+      expect(body.message).toEqual([
+        {
+          message: '"title" is required',
+          path: ['title'],
+        },
+      ])
+    })
   })
 })

@@ -7,6 +7,7 @@ import {
   Delete,
   Param,
   Patch,
+  UsePipes,
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -18,13 +19,19 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { ListFactory } from '../domain/factories/ListFactory'
-import { ApiCreateList } from '../domain/dtos/api/ApiCreateList.dto'
+
+import {
+  ApiCreateList,
+  apiCreateListSchema,
+} from '../domain/dtos/api/ApiCreateList.dto'
+
 import { ApiPatchList } from '../domain/dtos/api/ApiPatchList.dto'
 import { ApiList } from '../domain/dtos/api/ApiList.dto'
 import { ApiListCollection } from '../domain/dtos/api/ApiListCollection.dto'
 import { ListApiSerializer } from '../domain/serializers/api/ListApiSerializer'
 import { ListCollectionApiSerializer } from '../domain/serializers/api/ListCollectionApiSerializer'
 import { ListsRepo } from '../domain/repositories/listsRepo'
+import { SchemaValidationPipe } from '../infra/SchemaValidationPipe'
 
 @Controller('lists')
 @ApiTags('lists')
@@ -65,6 +72,7 @@ export class ListsController {
     description: 'List was succesfuly created',
     type: ApiList,
   })
+  @UsePipes(new SchemaValidationPipe(apiCreateListSchema))
   async createList(
     @Body() createListPayload: ApiCreateList,
     @Headers('x-user-id') userId: string,

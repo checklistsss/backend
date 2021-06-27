@@ -96,7 +96,8 @@
         "properties": {
           "title": {
             "type": "string",
-            "example": "My Groceries List"
+            "example": "My Groceries List",
+            "minLength": 1
           }
         },
         "required": [
