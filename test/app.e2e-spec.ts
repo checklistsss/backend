@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { Test, TestingModule } from '@nestjs/testing'
-import { INestApplication, Injectable } from '@nestjs/common'
+import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common'
 import * as request from 'supertest'
 import { DynamodbDriverProvider } from '../src/domain/repositories/listsRepo'
 import { DynamoDB, Endpoint } from 'aws-sdk'
@@ -9,11 +9,12 @@ import { ConfigModule } from '@nestjs/config'
 import { AppModule } from '../src/app.module'
 
 @Injectable()
-export class LocalDynamodbDriverProvider implements DynamodbDriverProvider {
+export class LocalDynamodbDriverProvider
+  implements DynamodbDriverProvider, OnModuleInit
+{
   private readonly _documentClient: DynamoDB.DocumentClient
   private readonly _dynamodbClient: DynamoDB
   private readonly _config: Config
-  private _isInitializaed = false
 
   constructor(configProvider: ConfigProvider) {
     this._config = configProvider.config
@@ -34,20 +35,18 @@ export class LocalDynamodbDriverProvider implements DynamodbDriverProvider {
     this._dynamodbClient = new DynamoDB(params)
   }
 
-  async init(): Promise<void> {
-    if (this._isInitializaed) {
-      return
-    }
-
+  private async deleteTable(): Promise<void> {
     await this._dynamodbClient
       .deleteTable({
         TableName: this._config.aws.dynamoDb.tableName,
       })
       .promise()
       .catch(() => {
-        // ignore delete errors
+        /* intentionally ignored */
       })
+  }
 
+  private async createTable(): Promise<void> {
     await this._dynamodbClient
       .createTable({
         TableName: this._config.aws.dynamoDb.tableName,
@@ -79,6 +78,11 @@ export class LocalDynamodbDriverProvider implements DynamodbDriverProvider {
       .promise()
   }
 
+  async onModuleInit(): Promise<void> {
+    await this.deleteTable()
+    await this.createTable()
+  }
+
   get driver(): DynamoDB.DocumentClient {
     return this._documentClient
   }
@@ -100,17 +104,12 @@ describe('List API', () => {
       .useClass(LocalDynamodbDriverProvider)
       .compile()
 
-    const localDynamoDb = moduleFixture.get(
-      DynamodbDriverProvider,
-    ) as LocalDynamodbDriverProvider
-    await localDynamoDb.init()
-
     app = moduleFixture.createNestApplication()
     await app.init()
   })
 
   describe('POST /lists', () => {
-    it('can create a list', () => {
+    it('should create a list', () => {
       return request(app.getHttpServer())
         .post('/lists')
         .set('x-user-id', '123')
