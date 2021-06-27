@@ -18,8 +18,8 @@ jobs:
           name: Run linter
 
       - run:
-          command: npm run test:cov
-          name: Run unit tests with code coverage
+          command: npm run test
+          name: Run unit tests
 
       - run:
           command: npm run test:e2e
