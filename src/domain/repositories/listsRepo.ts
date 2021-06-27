@@ -28,6 +28,7 @@ export class RealDynamodbDriverProvider implements DynamodbDriverProvider {
     const {
       aws: { dynamoDb },
     } = configProvider.config
+
     this._driver = new DynamoDB.DocumentClient({
       apiVersion: '2012-08-10',
       region: dynamoDb.region,

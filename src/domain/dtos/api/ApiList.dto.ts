@@ -22,4 +22,7 @@ export abstract class ApiList {
     type: [ApiItem],
   })
   items: ApiItemCollection
+
+  @ApiResponseProperty()
+  percentageDone: number
 }

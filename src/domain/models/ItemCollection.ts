@@ -1,5 +1,6 @@
 import { Nullable } from 'src/utils/types'
 import Item from './Item'
+import { ItemStatus } from './ItemStatus'
 
 export default class ItemCollection {
   constructor(private readonly _items: Item[] = []) {}
@@ -10,6 +11,11 @@ export default class ItemCollection {
 
   findById(itemId: string): Nullable<Item> {
     return this._items.find((i) => i.id === itemId)
+  }
+
+  get percentageDone(): number {
+    const done = this._items.filter((i) => i.status === ItemStatus.DONE)
+    return (done.length / this._items.length) * 100
   }
 
   get items(): Item[] {

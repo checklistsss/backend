@@ -77,13 +77,18 @@
             "items": {
               "$ref": "#/components/schemas/ApiItem"
             }
+          },
+          "percentageDone": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
           "id",
           "userId",
           "title",
-          "items"
+          "items",
+          "percentageDone"
         ]
       },
       "ApiCreateList": {

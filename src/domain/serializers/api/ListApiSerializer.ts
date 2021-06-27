@@ -15,6 +15,7 @@ export class ListApiSerializer implements Serializer<List, ApiList> {
       id: list.id,
       userId: list.userId,
       title: list.title,
+      percentageDone: list.items.percentageDone,
       items: this.itemCollectionApiSerializer.toJSON(list.items),
     }
   }
