@@ -18,8 +18,12 @@ jobs:
           name: Run linter
 
       - run:
+          command: npm run test:cov
+          name: Run unit tests with code coverage
+
+      - run:
           command: npm run test:e2e
-          name: Run unit and integration tests
+          name: Run integration tests
 
       # - run:
       #     command: curl https://cli-assets.heroku.com/install.sh | sh
