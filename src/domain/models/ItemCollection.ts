@@ -13,9 +13,17 @@ export default class ItemCollection {
     return this._items.find((i) => i.id === itemId)
   }
 
+  get length(): number {
+    return this._items.length
+  }
+
   get percentageDone(): number {
+    if (!this.length) {
+      return 0
+    }
+
     const done = this._items.filter((i) => i.status === ItemStatus.DONE)
-    return (done.length / this._items.length) * 100
+    return (done.length / this.length) * 100
   }
 
   get items(): Item[] {
