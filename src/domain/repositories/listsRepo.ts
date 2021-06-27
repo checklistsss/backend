@@ -12,6 +12,7 @@ import { DbList } from '../dtos/db/DbList.dto'
 import ConfigProvider from '../../infra/env'
 import DbItemPatchData from '../dtos/db/DbItemPatch.dto'
 import DbListPatchData from '../dtos/db/DbListPatchData.dto'
+import { ListKey } from './ListKey'
 
 type KeyMap = DynamoDB.DocumentClient.ExpressionAttributeNameMap
 type ValueMap = DynamoDB.DocumentClient.ExpressionAttributeValueMap
@@ -61,8 +62,7 @@ export class ListsRepo {
   }
 
   async patchList(
-    userId: string,
-    listId: string,
+    listKey: ListKey,
     listPatchData: DbListPatchData,
   ): Promise<List> {
     const values: ValueMap = {}
@@ -77,7 +77,7 @@ export class ListsRepo {
 
     const { Attributes: data } = await this._driver
       .update({
-        Key: { userId, listId },
+        Key: listKey,
         UpdateExpression: `SET ${expressions.join(', ')}`,
         ExpressionAttributeNames: keys,
         ExpressionAttributeValues: values,
@@ -90,8 +90,7 @@ export class ListsRepo {
   }
 
   async patchItem(
-    userId: string,
-    listId: string,
+    listKey: ListKey,
     itemId: string,
     itemPatchData: DbItemPatchData,
   ): Promise<List> {
@@ -110,7 +109,7 @@ export class ListsRepo {
 
     const { Attributes: data } = await this._driver
       .update({
-        Key: { userId, listId },
+        Key: listKey,
         UpdateExpression: `SET ${expressions.join(', ')}`,
         ExpressionAttributeNames: keys,
         ExpressionAttributeValues: values,
@@ -123,10 +122,10 @@ export class ListsRepo {
     return this.listFactory.fromDbModel(data as DbList)
   }
 
-  async insertItem(listId: string, userId: string, item: Item): Promise<List> {
+  async insertItem(listKey: ListKey, item: Item): Promise<List> {
     const { Attributes: data } = await this._driver
       .update({
-        Key: { userId, listId },
+        Key: listKey,
         UpdateExpression: `
         SET 
           #items.#itemId = :item
@@ -147,14 +146,10 @@ export class ListsRepo {
     return this.listFactory.fromDbModel(data as DbList)
   }
 
-  async deleteItem(
-    listId: string,
-    userId: string,
-    itemId: string,
-  ): Promise<List> {
+  async deleteItem(listKey: ListKey, itemId: string): Promise<List> {
     const { Attributes: data } = await this._driver
       .update({
-        Key: { userId, listId },
+        Key: listKey,
         UpdateExpression: `
         REMOVE 
           #items.#itemId
@@ -204,11 +199,11 @@ export class ListsRepo {
     )
   }
 
-  async deleteList(userId: string, listId: string): Promise<void> {
+  async deleteList(listKey: ListKey): Promise<void> {
     await this._driver
       .delete({
         TableName: this._tableName,
-        Key: { userId, listId },
+        Key: listKey,
       })
       .promise()
   }

@@ -95,7 +95,7 @@ export class ListsController {
     @Param('listId') listId: string,
     @Headers('x-user-id') userId: string,
   ): Promise<void> {
-    await this.listsRepo.deleteList(userId, listId)
+    await this.listsRepo.deleteList({ userId, listId })
   }
 
   @Patch(':listId')
@@ -112,7 +112,7 @@ export class ListsController {
     @Headers('x-user-id') userId: string,
     @Body() patchData: ApiPatchList,
   ): Promise<ApiList> {
-    const list = await this.listsRepo.patchList(userId, listId, patchData)
+    const list = await this.listsRepo.patchList({ userId, listId }, patchData)
 
     return this.listApiSerializer.toJSON(list)
   }

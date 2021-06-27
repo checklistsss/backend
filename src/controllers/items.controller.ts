@@ -60,7 +60,7 @@ export class ItemsController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<ApiList> {
     const item = this.itemFactory.fromCreateListApiModel(createItemPayload)
-    const list = await this.listsRepo.insertItem(listId, userId, item)
+    const list = await this.listsRepo.insertItem({ listId, userId }, item)
 
     res.set('x-item-id', item.id)
     return this.listApiSerializer.toJSON(list)
@@ -77,7 +77,7 @@ export class ItemsController {
     @Param('itemId') itemId: string,
     @Headers('x-user-id') userId: string,
   ): Promise<ApiList> {
-    const list = await this.listsRepo.deleteItem(listId, userId, itemId)
+    const list = await this.listsRepo.deleteItem({ listId, userId }, itemId)
     return this.listApiSerializer.toJSON(list)
   }
 
@@ -97,8 +97,7 @@ export class ItemsController {
     @Body() patchData: ApiPatchItem,
   ): Promise<ApiList> {
     const list = await this.listsRepo.patchItem(
-      userId,
-      listId,
+      { userId, listId },
       itemId,
       patchData,
     )
