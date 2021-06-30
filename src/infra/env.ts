@@ -1,5 +1,7 @@
-import { Env } from '@humanwhocodes/env'
+import { Env } from '@renatoargh/env'
 import { Injectable } from '@nestjs/common'
+
+const AWS_REGION_REGEX = /^[a-z]{2}-[a-z]*-[0-9]{1}/
 
 const env = new Env()
 
@@ -28,7 +30,7 @@ export default class ConfigProvider {
       aws: {
         dynamoDb: {
           tableName: env.require('AWS_DYNAMODB_TABLE'),
-          region: env.require('AWS_DYNAMODB_REGION'),
+          region: env.requireMatch('AWS_DYNAMODB_REGION', AWS_REGION_REGEX),
         },
       },
     }
