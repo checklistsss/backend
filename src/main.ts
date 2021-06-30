@@ -6,7 +6,7 @@ import {
 } from '@nestjs/swagger'
 import * as fs from 'fs'
 import * as path from 'path'
-import { Env } from '@humanwhocodes/env'
+import { Env } from '@renatoargh/env'
 
 import { AppModule } from './app.module'
 
